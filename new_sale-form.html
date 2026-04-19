@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sales form</title>
+     <link rel="stylesheet" href="new_sale_form.css">
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Record New Sale</h2>
+
+    <form>
+        <div class="form-group">
+            <label for="name">Customer Name</label>
+            <input id="name" type="text" placeholder="e.g. John Doe" required>
+        </div>
+
+        <div class="form-group">
+            <label for="Contact">Contact Number</label>
+            <input id="Contact" type="text" placeholder="+256..." required>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label>Items Sold</label>
+                <!-- <button type="button" class="btn-add">+ Add Item</button> -->
+            </div>
+            
+            <div class="item-box">
+                <label>Product</label>
+                <select name="product" required>
+                    <option value="" disabled selected>Select product</option>
+                    <option value="cem_II">Cement CEM IIN</option>
+                    <option value="cem_III">Cement CEM IIIN</option>
+                    <option value="iron_bars_10">Iron Bars 10mm</option>
+                    <option value="iron_bars_12">Iron Bars 12mm</option>
+                    <option value="iron_bars_16">Iron Bars 16mm</option>
+                    <option value="nails_1">Nails 1 inch (5kg)</option>
+                    <option value="nails_3">Nails 3 inch (5kg)</option>
+                    <option value="roofing_nails">Roofing Nails (5kg)</option>
+                    <option value="wheelbarrows">Wheelbarrow Standard</option>
+                    <option value="wire_mesh">Wire Mesh</option>
+                    <option value="barbed_wire_high_tensile">Barbed Wire High Tensile</option>
+                    <option value="barbed_wire_low_tensile">Barbed Wire Low Tensile</option>
+                    <option value="iron_sheets_28_red">Iron Sheets Gauge 28 (Red)</option>
+                    <option value="iron_sheets_28_green">Iron Sheets Gauge 28 (Green)</option>
+                    <option value="iron_sheets_30_blue">Iron Sheets Gauge 30 (Blue)</option>
+                </select>
+                
+                <div style="margin-top:10px;">
+                    <label>Quantity</label>
+                    <input type="number" value="1" min="1" required>
+                </div>
+            </div>
+        </div>
+
+         <div class="form-group">
+            <label for="sub_total">Sub Total</label>
+            <input id="sub_total" type="text" placeholder="0 UGX" required>
+        </div>
+
+         <div class="form-group">
+            <label for="delivery">Delivery Fee</label>
+            <input id="delivery" type="text" placeholder="0 UGX" required>
+        </div>
+
+         <div class="form-group">
+            <label for="total">Total</label>
+            <input id="total" type="text" placeholder="0 UGX" required>
+        </div>
+      
+        <p class="info-text">
+            * Free delivery within 10km for orders ≥500k UGX. 30k fee for distances >10km.<br><br>
+            <strong>Note:</strong> Sale will be recorded and stock quantities will be updated automatically.
+        </p>
+
+        <button type="submit" class="btn-save">Confirm & Record Sale</button>
+    </form>
+</div>
+
+</body>
+</html>

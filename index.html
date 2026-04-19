@@ -11,6 +11,30 @@
       crossorigin="anonymous"
     />
   </head>
+  <style>
+    .btn-login {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #2563eb;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .btn-login:hover {
+            background-color: #1d4ed8;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+  </style>
   <body class="d-flex justify-content-center align-items-center vh-100">
     <div class="card p-4 shadow" style="max-width: 400px; width: 100%">
       <div>
@@ -19,23 +43,25 @@
         <div class="mb-3">
           <label for="formGroupExampleInput" class="form-label">USERNAME</label>
           <input
+            name="userName"
             type="text"
             class="form-control"
             id="formGroupExampleInput"
             placeholder="Enter user name"
           />
         </div>
-        <div class="mb-3">
+        <!-- <div class="mb-3">
           <label for="formGroupExampleInput2" class="form-label"
             >EMAIL ADDRESS</label
           >
           <input
+            name="emailAddress"
             type="text"
             class="form-control"
             id="formGroupExampleInput2"
             placeholder="Enter email address"
           />
-        </div>
+        </div> -->
 
         <div class="mb-3">
           <label for="password" class="form-label">PASSWORD</label>
@@ -48,6 +74,17 @@
             required
           />
         </div>
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          name="user_role"
+          required
+        >
+          <option value="" disabled selected>Select user role</option>
+          <option value="1">Admin</option>
+          <option value="2">Store Manager</option>
+          <option value="3">Sales attendant</option>
+        </select>
 
         <div class="col-auto">
           <div class="form-check">
@@ -62,10 +99,8 @@
           </div>
         </div>
         <div class="text-center">
-          <button type="button" class="btn btn-primary btn-sm w-50">
-            LOGIN
-          </button>
-      </div>
+          <a href="dashboard.html" class="btn-login"> Login</a>
+        </div>
       </div>
     </div>
 

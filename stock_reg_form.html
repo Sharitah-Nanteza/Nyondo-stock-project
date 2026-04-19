@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>stock_registration</title>
+    <link rel="stylesheet" href="stock_reg_form.css">
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Stock registration form</h2>
+    <form>
+        <div class="row">
+            <div class="field">
+                <label for="name">Product Name</label>
+                <input id="name" type="text" placeholder="e.g., Cement CEM IIN" required>
+            </div>
+            <div class="field">
+                <label>Category</label>
+                <select name="category" required>
+                <option value="" disabled selected>Select category</option>
+                    <option value="cement">Cement</option>
+                     <option value="iron_bars">Iron Bars</option>
+                      <option value="nails">Nails</option>
+                       <option value="wheelbarrows">Wheelbarrows</option>
+                        <option value="wire_mesh">Wire mesh</option>
+                         <option value="baebed_wire">Barbed wire</option>
+                          <option value="iron_sheets">Iron Sheets</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label for="qty">Quantity</label>
+                <input id="qty" type="number" value="100" required>
+            </div>
+            <div class="field">
+                <label for="date">Date Available</label>
+                <input id="date" type="date" value="2026-04-14" required>
+            </div>
+        </div>
+
+        <div class="field full-width">
+            <label>Unit</label>
+            <select name="unit" required>
+                <option value="" disabled selected>Select unit</option>
+                  <option value="bag">Bag</option>
+  <option value="piece">Piece</option>
+    <option value="pack">Pack</option>
+      <option value="roll">Roll</option>
+        <option value="sheet">Sheet</option>
+            </select>
+        </div>
+
+        <div class="field full-width">
+            <label for="supplier_name">Supplier Name</label>
+            <input id="supplier_name" type="text" placeholder="e.g., Hima Cement" required>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label for="cost">Unit Cost (UGX)</label>
+                <input id="cost" type="number" value="32000" required>
+            </div>
+            <div class="field">
+                <label for="tp_cost">Transportation Cost (UGX)</label>
+                <input id="tp_cost" type="number" value="150000" required>
+            </div>
+        </div>
+
+        <p class="note">📦 Stock will be added to inventory upon registration</p>
+    </form>
+</div>
+
+</body>
+</html>

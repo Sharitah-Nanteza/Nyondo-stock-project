@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nyondo Dashboard</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  display:flex;
+  background:#f4f6f9;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:#1e2a38;
+  color:white;
+  height:100vh;
+  padding:20px;
+}
+
+.sidebar h2{
+  font-size:18px;
+  margin-bottom:10px;
+}
+
+.sidebar p{
+  font-size:12px;
+  color:#bbb;
+  margin-bottom:20px;
+}
+
+.menu a{
+  display:block;
+  color:white;
+  text-decoration:none;
+  padding:10px;
+  margin:5px 0;
+  border-radius:5px;
+}
+
+.menu a:hover{
+  background:#007bff;
+}
+
+/* MAIN CONTENT */
+.main{
+  flex:1;
+  padding:20px;
+}
+
+/* TOP */
+.top{
+  margin-bottom:20px;
+}
+
+.top h1{
+  font-size:22px;
+}
+
+.top p{
+  color:#666;
+}
+
+/* CARDS */
+.cards{
+  display:grid;
+  grid-template-columns: repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.card{
+  background:white;
+  padding:15px;
+  border-radius:8px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.card h3{
+  font-size:14px;
+  color:#555;
+}
+
+.card h2{
+  margin-top:10px;
+  color:#007bff;
+}
+
+/* SECTIONS */
+.section{
+  background:white;
+  padding:15px;
+  border-radius:8px;
+  margin-bottom:20px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.section h3{
+  margin-bottom:10px;
+}
+
+/* lists */
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid #eee;
+  font-size:14px;
+}
+
+.item:last-child{
+  border-bottom:none;
+}
+
+/* CATEGORY GRID */
+.categories{
+  display:grid;
+  grid-template-columns: repeat(3,1fr);
+  gap:10px;
+}
+
+.cat{
+  background:#f1f1f1;
+  padding:10px;
+  border-radius:5px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>NYONDO</h2>
+  <p>General Hardware LTD<br>Nansana, Wakiso District</p>
+
+  <div class="menu">
+    <a href="#">Dashboard</a>
+    <a href="#">Stock Management</a>
+    <a href="#">Sales Recording</a>
+    <a href="#">Customer Deposit</a>
+    <a href="#">Supplier Credits</a>
+    <a href="#">Credit Registration</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP -->
+  <div class="top">
+    <h1>Dashboard</h1>
+    <p>Business overview for today</p>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards">
+
+    <div class="card">
+      <h3>Stock Value</h3>
+      <h2>64.2M UGX</h2>
+    </div>
+
+    <div class="card">
+      <h3>Sales Today</h3>
+      <h2>0.0M UGX</h2>
+    </div>
+
+    <div class="card">
+      <h3>Active Deposits</h3>
+      <h2>3</h2>
+    </div>
+
+    <div class="card">
+      <h3>Supplier Dues</h3>
+      <h2>9.2M UGX</h2>
+    </div>
+
+  </div>
+
+  <!-- RECENT SALES -->
+  <div class="section">
+    <h3>Recent Sales</h3>
+
+    <div class="item">
+      <span>Kampala Hardware Ltd (2 items)</span>
+      <span>2.68M UGX</span>
+    </div>
+
+    <div class="item">
+      <span>John Mukasa (2 items)</span>
+      <span>0.95M UGX</span>
+    </div>
+
+    <div class="item">
+      <span>Builders Corner (2 items)</span>
+      <span>0.95M UGX</span>
+    </div>
+
+  </div>
+
+  <!-- LOW STOCK -->
+  <div class="section">
+    <h3>Low Stock Alert</h3>
+
+    <div class="item"><span>Roofing Nails (5kg)</span><span>48 pack</span></div>
+    <div class="item"><span>Wheelbarrow Standard</span><span>25 piece</span></div>
+    <div class="item"><span>Wire Mesh</span><span>38 roll</span></div>
+    <div class="item"><span>Barbed Wire High Tensile</span><span>42 roll</span></div>
+    <div class="item"><span>Barbed Wire Low Tensile</span><span>35 roll</span></div>
+
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="section">
+    <h3>Stock by Category</h3>
+
+    <div class="categories">
+      <div class="cat">Cement<br>24.0M</div>
+      <div class="cat">Iron Bars<br>15.7M</div>
+      <div class="cat">Nails<br>3.8M</div>
+      <div class="cat">Equipment<br>2.4M</div>
+      <div class="cat">Wire<br>7.8M</div>
+      <div class="cat">Iron Sheets<br>10.6M</div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

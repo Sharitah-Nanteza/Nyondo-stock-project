@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>stock form</title>
+    <link rel="stylesheet" href="stock.css">
+</head>
+<body>
+    
+   <h2>NYONDO</h2>
+     <p>General Hardware Limited</p>
+    <div class="col-md-3 col-lg-2 sidebar">
+      <h4 class="text-white">NYONDO</h4>
+<p class="text-secondary">General Hardware LTD</p>
+
+<ul class="nav flex-column mt-4">
+  <li class="nav-item">
+    <a class="nav-link active" href="dashboard.html">Dashboard</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="index.html">Login</a>
+  </li>
+    <li class="nav-item">
+    <a class="nav-link" href="stock.html">Stock Management </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="sales.html">Sales Recording</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="customer_deposits.html">Customer Deposits</a>
+  </li>
+    <li class="nav-item">
+    <a class="nav-link" href="#">Supplier Credits</a>
+  </li>
+    <li class="nav-item">
+    <a class="nav-link" href="#">Credit Registration</a>
+  </li>
+</ul>
+    </div>
+<div class="dashboard">
+    <h1>Stock Management</h1>
+    <p class="stats">17 products · Total value: <strong>64.21M UGX</strong></p>
+
+    <div class="controls">
+        <div class="text-center">
+         <a href="stock_reg_form.html" class="btn-add">+ Add Stock</a>
+        </div>
+        <select name="Categories" required>
+            <option value="" disabled selected>All Categories</option>
+            <option value="cement">Cement</option>
+            <option value="bars">Iron Bars</option>
+            <option value="nails">Nails</option>
+            <option value="wheelbarrows">Wheelbarrows</option>
+            <option value="wire">Wire</option>
+            <option value="iron_sheets">Iron Sheets</option>
+
+        </select>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Supplier</th>
+                <th>Quantity</th>
+                <th>Unit Cost</th>
+                <th>Transport</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td class="id-cell">01</td><td>Cement CEM IIN</td><td>Cement</td><td>Hima Cement</td><td>450 bag</td><td>32,000 UGX</td><td>150,000 UGX</td><td>2026-04-05</td></tr>
+            <tr><td class="id-cell">02</td><td>Cement CEM IIIN</td><td>Cement</td><td>Tororo Cement</td><td>320 bag</td><td>30,000 UGX</td><td>120,000 UGX</td><td>2026-04-03</td></tr>
+            <tr><td class="id-cell">03</td><td>Iron Bars 10mm</td><td>Iron Bars</td><td>Roofings Ltd</td><td>180 piece</td><td>28,000 UGX</td><td>80,000 UGX</td><td>2026-04-08</td></tr>
+            <tr><td class="id-cell">04</td><td>Iron Bars 12mm</td><td>Iron Bars</td><td>Roofings Ltd</td><td>150 piece</td><td>38,000 UGX</td><td>80,000 UGX</td><td>2026-04-08</td></tr>
+            <tr><td class="id-cell">05</td><td>Iron Bars 16mm</td><td>Iron Bars</td><td>Roofings Ltd</td><td>95 piece</td><td>52,000 UGX</td><td>80,000 UGX</td><td>2026-04-07</td></tr>
+            <tr><td class="id-cell">06</td><td>Nails 1 inch (5kg)</td><td>Nails</td><td>Hardware Depot</td><td>85 pack</td><td>18,000 UGX</td><td>30,000 UGX</td><td>2026-04-02</td></tr>
+            <tr><td class="id-cell">07</td><td>Nails 3 inch (5kg)</td><td>Nails</td><td>Hardware Depot</td><td>62 pack</td><td>19,000 UGX</td><td>30,000 UGX</td><td>2026-04-02</td></tr>
+            <tr><td class="id-cell">08</td><td>Nails 4 inch (5kg)</td><td>Nails</td><td>Hardware Depot</td><td>62 pack</td><td>19,500 UGX</td><td>30,000 UGX</td><td>2026-04-02</td></tr>
+
+            <tr><td class="id-cell">09</td><td>Nails 5 inch (5kg)</td><td>Nails</td><td>Hardware Depot</td><td>62 pack</td><td>20,000 UGX</td><td>30,000 UGX</td><td>2026-04-02</td></tr>
+
+            <tr><td class="id-cell">10</td><td>Roofing Nails (5kg)</td><td>Nails</td><td>Hardware Depot</td><td>48 pack</td><td>22,000 UGX</td><td>30,000 UGX</td><td>2026-04-06</td></tr>
+            <tr><td class="id-cell">11</td><td>Wheelbarrows</td><td>Wheelbarrows</td><td>Tools & More</td><td>25 piece</td><td>95,000 UGX</td><td>50,000 UGX</td><td>2026-03-28</td></tr>
+            <tr><td class="id-cell">12</td><td>Wire Mesh</td><td>Wire</td><td>Steel Suppliers</td><td>38 roll</td><td>45,000 UGX</td><td>40,000 UGX</td><td>2026-04-01</td></tr>
+            <tr><td class="id-cell">13</td><td>Barbed Wire High Tensile</td><td>Wire</td><td>Steel Suppliers</td><td>42 roll</td><td>85,000 UGX</td><td>40,000 UGX</td><td>2026-04-04</td></tr>
+            <tr><td class="id-cell">14</td><td>Barbed Wire Low Tensile</td><td>Wire</td><td>Steel Suppliers</td><td>35 roll</td><td>72,000 UGX</td><td>40,000 UGX</td><td>2026-04-04</td></tr>
+            <tr><td class="id-cell">15</td><td>Iron Sheets Gauge 28 (Red)</td><td>Iron Sheets</td><td>Roofings Ltd</td><td>125 sheet</td><td>35,000 UGX</td><td>70,000 UGX</td><td>2026-04-09</td></tr>
+            <tr><td class="id-cell">16</td><td>Iron Sheets Gauge 28 (Green)</td><td>Iron Sheets</td><td>Roofings Ltd</td><td>98 sheet</td><td>35,000 UGX</td><td>70,000 UGX</td><td>2026-04-09</td></tr>
+            <tr><td class="id-cell">17</td><td>Iron Sheets Gauge 30 (Blue)</td><td>Iron Sheets</td><td>Roofings Ltd</td><td>87 sheet</td><td>32,000 UGX</td><td>70,000 UGX</td><td>2026-04-05</td></tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
