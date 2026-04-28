@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Customer</title>
+    <link rel="stylesheet" href="/public/css/credit_form.css" />
+  </head>
+  <body>
+    <div class="modal">
+      <div class="modal-content">
+        <h2>Register New Customer</h2>
+        <form action="/thecredit" method="post">
+          <label for="fullname">Full Name (as on National ID)</label>
+          <input
+            id="fullname"
+            type="text"
+            name="fullname"
+            placeholder="e.g. Moses Kato"
+            required
+          />
+
+          <label for="nin">National ID Number (NIN)</label>
+          <input
+            id="nin"
+            type="text"
+            name="nin"
+            placeholder="e.g. CM9012345678ABC"
+            required
+          />
+
+          <label for="phonenumber">Phone Number</label>
+          <input
+            id="phonenumber"
+            name="phonenumber"
+            type="text"
+            placeholder="+256700123456"
+            required
+          />
+
+          <label for="locaton">Location</label>
+          <input
+            id="location"
+            type="text"
+            name="location"
+            placeholder="e.g. Nansana, Wakiso"
+          />
+
+          <label for="email">Email (Optional)</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="customer@example.com"
+          />
+
+          <div class="buttons">
+            <button type="reset" class="cancel-btn">Cancel</button>
+            <button type="submit" class="submit-btn">Register Customer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

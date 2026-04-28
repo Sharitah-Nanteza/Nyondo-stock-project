@@ -21,3 +21,16 @@ input, select {
 .full-width { margin-bottom: 15px; }
 
 .note { font-size: 0.85em; color: #777; margin-top: 10px; }
+  .btn-save {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-save:hover { background-color: #2563eb; }

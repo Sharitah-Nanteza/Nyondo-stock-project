@@ -4,29 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Record Deposit Form</title>
-         <link rel="stylesheet" href="deposit_form.css">
+         <link rel="stylesheet" href="/css/deposit_form.css">
 </head>
 <body>
 
 <div class="form-card">
     <h2>Record New Deposit</h2>
     
-    <form>
+    <form action="/deposit" method="post">
         <div class="input-group">
             <label for="name">Name of Customer</label>
-            <input id="name" type="text" placeholder="John Doe" class="amount-input" required>
+            <input id="name" type="text" name="name" placeholder="John Doe" class="amount-input" required>
             <!-- <div class="read-only-box">David Okello</div> -->
         </div>
 
         <div class="input-group">
             <label for="amount">Current Total Amount</label>
-            <input id="amount" type="text" placeholder="eg 456,000" class="amount-input" required>
+            <input id="amount" type="text" name="total" placeholder="eg 456,000" class="amount-input" required>
             <!-- <div class="read-only-box">456,000 UGX</div> -->
         </div>
 
         <div class="input-group">
             <label for="new-amount">Amount to Deposit (UGX)</label>
-            <input type="number" id="new-amount" class="amount-input" placeholder="e.g. 50000" required>
+            <input type="number" id="new-amount" name="amount" class="amount-input" placeholder="e.g. 50000" required>
         </div>
 
         <div class="input-group">

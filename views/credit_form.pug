@@ -1,0 +1,23 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Register Customer
+  link(rel='stylesheet' href='/css/credit_form.css')
+.modal
+  .modal-content
+    h2 Register New Customer
+    form(action='/thecredit' method='post')
+      label(for='fullname') Full Name (as on National ID)
+      input#fullname(type='text' name='fullname' placeholder='e.g. Moses Kato' required='')
+      label(for='nin') National ID Number (NIN)
+      input#nin(type='text' name='nin' placeholder='e.g. CM9012345678ABC' required='')
+      label(for='phonenumber') Phone Number
+      input#phonenumber(name='phonenumber' type='text' placeholder='+256700123456' required='')
+      label(for='locaton') Location
+      input#location(type='text' name='location' placeholder='e.g. Nansana, Wakiso')
+      label(for='email') Email (Optional)
+      input#email(type='email' name='email' placeholder='customer@example.com')
+      .buttons
+        button.cancel-btn(type='reset') Cancel
+        button.submit-btn(type='submit') Register Customer

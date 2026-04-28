@@ -1,0 +1,80 @@
+extends layout 
+
+block content 
+  .main
+    .header
+      div
+        h1 Sales Recording
+        p 0 sales today &middot; Revenue: 0.00M UGX
+      .text-center
+        a.btn-new(href='new_sale-form.html') + New Sale
+    // sales summary
+    .stats-grid
+      .stat-card
+        small Total Sales (All Time)
+        h2 4
+        p(style='color:#2563eb') 4.79M UGX revenue
+      .stat-card
+        small Sales Today
+        h2 0
+        p(style='color:#2563eb') 0.00M UGX revenue
+      .stat-card
+        small Average Sale Value
+        h2 1.20M
+        p Per transaction
+    // recent transaction table
+    h3 Recent Transactions
+    table.sales-table
+      thead
+        tr
+          th Date / ID
+          th Customer
+          th Items Sold
+          th Subtotal
+          th Delivery
+          th Total
+      tbody
+        tr
+          td
+            | 2026-04-10 
+            br
+            small S001
+          td
+            strong Kampala Hardware Ltd
+            br
+            small +256700111222
+          td
+            .item-detail Cement (Hima) x 50
+            .item-detail Iron Bars (Roofings) x 30
+          td 2,680,000 UGX
+          td(style='color:#2563eb') Free
+          td.price-total 2.68M UGX
+        tr
+          td
+            | 2026-04-10 
+            br
+            small S002
+          td
+            strong John Mukasa
+            br
+            small +256750333444
+          td
+            .item-detail Cement (Hima) x 10
+            .item-detail Iron Sheets (Red) x 15
+          td 950,000 UGX
+          td(style='color:#2563eb') Free
+          td.price-total 0.95M UGX
+        tr
+          td
+            | 2026-04-09 
+            br
+            small S004
+          td
+            strong Sarah Namuli
+            br
+            small +256760777888
+          td
+            .item-detail Cement (Hima) x 5
+          td 175,000 UGX
+          td 30,000 UGX
+          td.price-total 0.20M UGX

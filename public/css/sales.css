@@ -5,6 +5,8 @@
             margin: 0;
             padding: 20px;
             color: #333;
+            display:flex;
+            background:#f4f6f9;
         }
 
         .container {
@@ -102,3 +104,53 @@
         .btn-new:active {
             transform: scale(0.98);
         }
+
+        .sidebar{
+  width:220px;
+  background:#2563eb;
+  color:white;
+  /* height:100vh; */
+  padding:20px;
+}
+
+.sidebar h2{
+  font-size:18px;
+  margin-bottom:10px;
+}
+
+.sidebar p{
+  font-size:12px;
+  color:#bbb;
+  margin-bottom:20px;
+}
+
+.menu a{
+  display:block;
+  color:white;
+  text-decoration:none;
+  padding:10px;
+  margin:5px 0;
+  border-radius:5px;
+}
+
+.menu a:hover{
+  background:#007bff;
+}
+
+body{
+  display:flex;
+  background:#f4f6f9;
+}
+
+.nav li{
+  list-style: none;
+  margin-bottom: 20px;
+}
+.main{
+    margin-left: 20px;
+}
+
+
+
+
+

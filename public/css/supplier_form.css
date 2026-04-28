@@ -1,0 +1,65 @@
+    * {
+        box-sizing: border-box; /* ✅ Fixes uneven padding */
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 420px;
+        background: white;
+        padding: 25px; /* balanced padding */
+        margin: auto;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    .note {
+        font-size: 12px;
+        color: #777;
+        margin-top: 5px;
+    }
+
+    .buttons {
+        margin-top: 20px;
+        text-align: right;
+    }
+
+    button {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .cancel {
+        background: #ccc;
+    }
+
+    .submit {
+        background: #007bff;
+        color: white;
+        margin-left: 10px;
+    }

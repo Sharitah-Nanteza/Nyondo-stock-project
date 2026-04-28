@@ -4,22 +4,22 @@
     <meta charset="UTF-8"/>
      <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sales form</title>
-     <link rel="stylesheet" href="new_sale_form.css">
+     <link rel="stylesheet" href="/css/new_sale_form.css">
 </head>
 <body>
 
 <div class="form-container">
     <h2>Record New Sale</h2>
 
-    <form>
+    <form action="/sale" method="post">
         <div class="form-group">
             <label for="name">Customer Name</label>
-            <input id="name" type="text" placeholder="e.g. John Doe" required>
+            <input id="name" type="text" name="name" placeholder="e.g. John Doe" required>
         </div>
 
         <div class="form-group">
             <label for="Contact">Contact Number</label>
-            <input id="Contact" type="text" placeholder="+256..." required>
+            <input id="Contact" type="text" name="contact_number" placeholder="+256..." required>
         </div>
 
         <hr>
@@ -52,25 +52,25 @@
                 </select>
                 
                 <div style="margin-top:10px;">
-                    <label>Quantity</label>
-                    <input type="number" value="1" min="1" required>
+                    <label for="qty">Quantity</label>
+                    <input id="qty" type="number" value="1" name="quantity" min="1" required>
                 </div>
             </div>
         </div>
 
          <div class="form-group">
             <label for="sub_total">Sub Total</label>
-            <input id="sub_total" type="text" placeholder="0 UGX" required>
+            <input id="sub_total" type="text" name="sub_total" placeholder="0 UGX" required>
         </div>
 
          <div class="form-group">
             <label for="delivery">Delivery Fee</label>
-            <input id="delivery" type="text" placeholder="0 UGX" required>
+            <input id="delivery" type="text" name="delivery_fee" placeholder="0 UGX" required>
         </div>
 
          <div class="form-group">
             <label for="total">Total</label>
-            <input id="total" type="text" placeholder="0 UGX" required>
+            <input id="total" type="text" name="total" placeholder="0 UGX" required>
         </div>
       
         <p class="info-text">

@@ -1,0 +1,60 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Credit Scheme
+  link(rel='stylesheet' href='/css/credit.css')
+.container
+  .header-section
+    .header-info
+      h1 Credit Scheme Customer Registration
+      span.customer-count 4 registered customers
+    // <button class="btn-register">+ Register Customer</button>
+    .text-center
+      a.btn-credit(href='credit_form.html') + Register Customer
+  .table-container
+    table
+      thead
+        tr
+          th Name / ID
+          th NIN Number
+          th Contact
+          th Email Address
+          th Location
+      tbody
+        tr
+          td
+            span.cust-name Moses Kato
+            span.cust-id ID: C001
+          td
+            span.nin-number CM89012345678ABC
+          td +256 700 123456
+          td(style='color: #cbd5e1') &mdash;
+          td.location-tag Nansana, Wakiso
+        tr
+          td
+            span.cust-name Grace Nakato
+            span.cust-id ID: C002
+          td
+            span.nin-number CF90123456789DEF
+          td +256 750 234567
+          td(style='color: #cbd5e1') &mdash;
+          td.location-tag Kasubi, Kampala
+        tr
+          td
+            span.cust-name David Okello
+            span.cust-id ID: C003
+          td
+            span.nin-number CM78901234567GHI
+          td +256 780 345678
+          td(style='color: #cbd5e1') &mdash;
+          td.location-tag Nakulabye, Kampala
+        tr
+          td
+            span.cust-name Betty Auma
+            span.cust-id ID: C004
+          td
+            span.nin-number CF01234567890JKL
+          td +256 760 456789
+          td(style='color: #cbd5e1') &mdash;
+          td.location-tag Nansana, Wakiso

@@ -1,0 +1,31 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  link(rel='stylesheet' href='/css/sales.css')
+  link(rel='stylesheet' href='/css/stock.css')
+  link(rel='stylesheet' href='/css/dashboard.css')
+.sidebar
+  h2 NYONDO
+  p
+    | General Hardware LTD
+    br
+    | Nansana, Wakiso District
+  .menu
+    nav
+      ul.nav.flex-column.mt-4
+        li.nav-item
+          a.nav-link.active(href='dashboard.html') Dashboard
+        li.nav-item
+          a.nav-link(href='index.html') Login
+        li.nav-item
+          a.nav-link(href='stock.html') Stock Management 
+        li.nav-item
+          a.nav-link(href='sales.html') Sales Recording
+        li.nav-item
+          a.nav-link(href='customer_deposits.html') Customer Deposits
+        li.nav-item
+          a.nav-link(href='supplier.html') Supplier Credits
+        li.nav-item
+          a.nav-link(href='credit.html') Credit Registration
+block content           

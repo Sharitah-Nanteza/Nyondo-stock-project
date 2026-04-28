@@ -1,0 +1,185 @@
+extends layout
+
+block content 
+  .dashboard
+    h1 Stock Management
+    p.stats
+      | 17 products &middot; Total value: 
+      strong 64.21M UGX
+    .controls
+      .text-center
+        a.btn-add(href='stock_reg_form.html') + Add Stock
+      select(name='Categories' required='')
+        option(value='' disabled='' selected='') All Categories
+        option(value='cement') Cement
+        option(value='bars') Iron Bars
+        option(value='nails') Nails
+        option(value='wheelbarrows') Wheelbarrows
+        option(value='wire') Wire
+        option(value='iron_sheets') Iron Sheets
+    table
+      thead
+        tr
+          th ID
+          th Product Name
+          th Category
+          th Supplier
+          th Quantity
+          th Unit Cost
+          th Transport
+          th Date
+          th Action
+      tbody
+        tr
+          td.id-cell 01
+          td Cement CEM IIN
+          td Cement
+          td Hima Cement
+          td 450 bag
+          td 32,000 UGX
+          td 150,000 UGX
+          td 2026-04-05
+        tr
+          td.id-cell 02
+          td Cement CEM IIIN
+          td Cement
+          td Tororo Cement
+          td 320 bag
+          td 30,000 UGX
+          td 120,000 UGX
+          td 2026-04-03
+        tr
+          td.id-cell 03
+          td Iron Bars 10mm
+          td Iron Bars
+          td Roofings Ltd
+          td 180 piece
+          td 28,000 UGX
+          td 80,000 UGX
+          td 2026-04-08
+        tr
+          td.id-cell 04
+          td Iron Bars 12mm
+          td Iron Bars
+          td Roofings Ltd
+          td 150 piece
+          td 38,000 UGX
+          td 80,000 UGX
+          td 2026-04-08
+        tr
+          td.id-cell 05
+          td Iron Bars 16mm
+          td Iron Bars
+          td Roofings Ltd
+          td 95 piece
+          td 52,000 UGX
+          td 80,000 UGX
+          td 2026-04-07
+        tr
+          td.id-cell 06
+          td Nails 1 inch (5kg)
+          td Nails
+          td Hardware Depot
+          td 85 pack
+          td 18,000 UGX
+          td 30,000 UGX
+          td 2026-04-02
+        tr
+          td.id-cell 07
+          td Nails 3 inch (5kg)
+          td Nails
+          td Hardware Depot
+          td 62 pack
+          td 19,000 UGX
+          td 30,000 UGX
+          td 2026-04-02
+        tr
+          td.id-cell 08
+          td Nails 4 inch (5kg)
+          td Nails
+          td Hardware Depot
+          td 62 pack
+          td 19,500 UGX
+          td 30,000 UGX
+          td 2026-04-02
+        tr
+          td.id-cell 09
+          td Nails 5 inch (5kg)
+          td Nails
+          td Hardware Depot
+          td 62 pack
+          td 20,000 UGX
+          td 30,000 UGX
+          td 2026-04-02
+        tr
+          td.id-cell 10
+          td Roofing Nails (5kg)
+          td Nails
+          td Hardware Depot
+          td 48 pack
+          td 22,000 UGX
+          td 30,000 UGX
+          td 2026-04-06
+        tr
+          td.id-cell 11
+          td Wheelbarrows
+          td Wheelbarrows
+          td Tools &amp; More
+          td 25 piece
+          td 95,000 UGX
+          td 50,000 UGX
+          td 2026-03-28
+        tr
+          td.id-cell 12
+          td Wire Mesh
+          td Wire
+          td Steel Suppliers
+          td 38 roll
+          td 45,000 UGX
+          td 40,000 UGX
+          td 2026-04-01
+        tr
+          td.id-cell 13
+          td Barbed Wire High Tensile
+          td Wire
+          td Steel Suppliers
+          td 42 roll
+          td 85,000 UGX
+          td 40,000 UGX
+          td 2026-04-04
+        tr
+          td.id-cell 14
+          td Barbed Wire Low Tensile
+          td Wire
+          td Steel Suppliers
+          td 35 roll
+          td 72,000 UGX
+          td 40,000 UGX
+          td 2026-04-04
+        tr
+          td.id-cell 15
+          td Iron Sheets Gauge 28 (Red)
+          td Iron Sheets
+          td Roofings Ltd
+          td 125 sheet
+          td 35,000 UGX
+          td 70,000 UGX
+          td 2026-04-09
+        tr
+          td.id-cell 16
+          td Iron Sheets Gauge 28 (Green)
+          td Iron Sheets
+          td Roofings Ltd
+          td 98 sheet
+          td 35,000 UGX
+          td 70,000 UGX
+          td 2026-04-09
+        tr
+          td.id-cell 17
+          td Iron Sheets Gauge 30 (Blue)
+          td Iron Sheets
+          td Roofings Ltd
+          td 87 sheet
+          td 32,000 UGX
+          td 70,000 UGX
+          td 2026-04-05

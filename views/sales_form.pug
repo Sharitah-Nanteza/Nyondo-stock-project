@@ -1,0 +1,58 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+  title Sales form
+  link(rel='stylesheet' href='/css/new_sale_form.css')
+.form-container
+  h2 Record New Sale
+  form(action='/addsale' method='post')
+    .form-group
+      label(for='name') Customer Name
+      input#name(type='text' name='name' placeholder='e.g. John Doe' required='')
+    .form-group
+      label(for='Contact') Contact Number
+      input#Contact(type='text' name='contact_number' placeholder='+256...' required='')
+    hr
+    .form-group
+      div(style='display: flex; justify-content: space-between; align-items: center;')
+        label Items Sold
+        // <button type="button" class="btn-add">+ Add Item</button>
+      .item-box
+        label Product
+        select(name='product' required='')
+          option(value='' disabled='' selected='') Select product
+          option(value='cem_II') Cement CEM IIN
+          option(value='cem_III') Cement CEM IIIN
+          option(value='iron_bars_10') Iron Bars 10mm
+          option(value='iron_bars_12') Iron Bars 12mm
+          option(value='iron_bars_16') Iron Bars 16mm
+          option(value='nails_1') Nails 1 inch (5kg)
+          option(value='nails_3') Nails 3 inch (5kg)
+          option(value='roofing_nails') Roofing Nails (5kg)
+          option(value='wheelbarrows') Wheelbarrow Standard
+          option(value='wire_mesh') Wire Mesh
+          option(value='barbed_wire_high_tensile') Barbed Wire High Tensile
+          option(value='barbed_wire_low_tensile') Barbed Wire Low Tensile
+          option(value='iron_sheets_28_red') Iron Sheets Gauge 28 (Red)
+          option(value='iron_sheets_28_green') Iron Sheets Gauge 28 (Green)
+          option(value='iron_sheets_30_blue') Iron Sheets Gauge 30 (Blue)
+        div(style='margin-top:10px;')
+          label(for='qty') Quantity
+          input#qty(type='number' value='1' name='quantity' min='1' required='')
+    .form-group
+      label(for='sub_total') Sub Total
+      input#sub_total(type='text' name='sub_total' placeholder='0 UGX' required='')
+    .form-group
+      label(for='delivery') Delivery Fee
+      input#delivery(type='text' name='delivery_fee' placeholder='0 UGX' required='')
+    .form-group
+      label(for='total') Total
+      input#total(type='text' name='total' placeholder='0 UGX' required='')
+    p.info-text
+      | * Free delivery within 10km for orders &ge;500k UGX. 30k fee for distances &gt;10km.
+      br
+      br
+      strong Note:
+      |  Sale will be recorded and stock quantities will be updated automatically.
+    button.btn-save(type='submit') Confirm &amp; Record Sale

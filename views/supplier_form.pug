@@ -1,0 +1,25 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Record Payment
+  link(rel='stylesheet' href='/css/supplier_form.css')
+form(action='/supply' method='post')
+  .container
+    h2 Record Payment to Supplier
+    label(for='supplier') Supplier Name
+    input#supplier(name='supplier' type='text' placeholder='Enter supplier name')
+    label(for='total') Total Amount (UGX)
+    input#total(type='number' name='total' placeholder='Enter total amount')
+    label(for='paid') Already Paid (UGX)
+    input#paid(type='number' name='paid' placeholder='Enter amount already paid')
+    label(for='balance') Balance Due (UGX)
+    input#balance(type='number' name='balance' placeholder='Enter remaining balance')
+    label(for='pay') Amount to Pay
+    input#pay(type='number' name='pay' placeholder='Enter amount to pay')
+    p.note Ensure amount does not exceed balance
+    label(for='date') Payment Date
+    input#date(name='date' type='date')
+    .buttons
+      button.cancel Cancel
+      button.submit Record Payment

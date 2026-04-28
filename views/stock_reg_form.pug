@@ -1,0 +1,52 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+  title stock_registration
+  link(rel='stylesheet' href='/css/stock_reg_form.css')
+.form-container
+  h2 Stock registration form
+  form(action='/stock' method='post')
+    .row
+      .field
+        label(for='name') Product Name
+        input#name(type='text' name='name' placeholder='e.g., Cement CEM IIN' required='')
+      .field
+        label Category
+        select(name='category' required='')
+          option(value='' disabled='' selected='') Select category
+          option(value='cement') Cement
+          option(value='iron_bars') Iron Bars
+          option(value='nails') Nails
+          option(value='wheelbarrows') Wheelbarrows
+          option(value='wire_mesh') Wire mesh
+          option(value='baebed_wire') Barbed wire
+          option(value='iron_sheets') Iron Sheets
+    .row
+      .field
+        label(for='qty') Quantity
+        input#qty(type='number' name='Quantity' value='100' required='')
+      .field
+        label(for='date') Date Available
+        input#date(type='date' name='date_available' value='2026-04-14' required='')
+    .field.full-width
+      label Unit
+      select(name='unit' required='')
+        option(value='' disabled='' selected='') Select unit
+        option(value='bag') Bag
+        option(value='piece') Piece
+        option(value='pack') Pack
+        option(value='roll') Roll
+        option(value='sheet') Sheet
+    .field.full-width
+      label(for='supplier_name') Supplier Name
+      input#supplier_name(type='text' name='supplier_name' placeholder='e.g., Hima Cement' required='')
+    .row
+      .field
+        label(for='cost') Unit Cost (UGX)
+        input#cost(type='number' name='unit_cost' value='32000' required='')
+      .field
+        label(for='tp_cost') Transportation Cost (UGX)
+        input#tp_cost(type='number' name='tp_cost' value='150000' required='')
+    button.btn-save(type='submit') Confirm &amp; Record stock
+    p.note &#x1F4E6; Stock will be added to inventory upon registration
