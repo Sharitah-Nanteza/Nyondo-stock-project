@@ -76,3 +76,12 @@ body{
   list-style: none;
   margin-bottom: 20px;
 }
+
+
+
+.text-center{
+display: flex;
+justify-content: space-between;
+align-items: center;
+
+}

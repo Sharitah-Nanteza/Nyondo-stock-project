@@ -1,0 +1,37 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Sales Dashboard
+  link(rel='stylesheet' href='/css/board.css')
+.sidebar
+  h2 NYONDO
+  p Sales Attendant
+  //- a(href='#') Dashboard
+  a(href='/sales-list') Sales
+  a(href='/stock') Stock
+  a.logout(href='/logout') Logout
+.main
+  .top
+    h1 Sales Dashboard
+    p Sales &amp; transactions
+  .cards
+    .card
+      h3 Sales Today
+      h2 2.0M UGX
+    .card
+      h3 Transactions
+      h2 12
+    //- .card
+    //-   h3 Cash Sales
+    //-   h2 1.5M UGX
+    //- .card
+    //-   h3 Credit Sales
+    //-   h2 0.5M UGX
+  .section
+    h3 Recent Sales
+    .item
+      span John Mukasa
+      span 0.95M UGX
+    .item
+      span Shop A
+      span 0.6M UGX

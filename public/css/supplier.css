@@ -24,7 +24,7 @@
         background: white;
         padding: 15px;
         border-radius: 6px;
-        flex: 1;
+        /* flex: 1; */
         border: 1px solid #ddd;
     }
 
@@ -97,7 +97,7 @@
     }
 
        .btn-record {
-            width: 100%;
+            /* width: 100%; */
             padding: 0.75rem;
             background-color: #2563eb;
             border: none;
@@ -114,7 +114,7 @@
             background-color: #1d4ed8;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        
+/*         
         .btn-record:active {
             transform: scale(0.98);
-        }
+        } */

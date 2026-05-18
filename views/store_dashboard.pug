@@ -1,0 +1,36 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Store Dashboard
+  link(rel='stylesheet' href='/css/board.css')
+.sidebar
+  h2 NYONDO
+  p Store Manager
+  //- a(href='#') Dashboard
+  a(href='/stock') Stock
+  a.logout(href='/logout') Logout
+.main
+  .top
+    h1 Store Dashboard
+    p Inventory control
+  .cards
+    .card
+      h3 Total Stock
+      h2 #{stats.stockValue.toLocaleString()}UGX
+    .card
+      h3 Low Stock
+      h2 5
+    .card
+      h3 Out of Stock
+      h2 2
+    .card
+      h3 Items
+      h2 320
+  .section
+    h3 Stock Alerts
+    .item
+      span Wire Mesh
+      span Low
+    .item
+      span Nails
+      span Critical

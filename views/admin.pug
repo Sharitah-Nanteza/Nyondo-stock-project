@@ -1,0 +1,48 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Admin Dashboard
+  link(rel='stylesheet' href='/css/board.css')
+.sidebar
+  h2 NYONDO
+  p Admin Panel
+  a(href='/registration') Registration
+  a(href='/stock') Stock
+  a(href='/sales-list') Sales
+  a(href='/supplier') Suppliers
+  a(href='/deposits') Deposits
+  a.logout(href='/logout') Logout
+.main
+  .top
+    h1 Admin Dashboard
+    p System overview
+  .cards
+    .card
+      h3 Stock Value
+      h2 #{stats.stockValue.toLocaleString()}UGX
+    .card
+      h3 Sales Today
+      h2 #{stats.salesToday.toLocaleString()}UGX
+    .card
+      h3 Credit Payments
+      h2 1.2M UGX
+    .card
+      h3 Pending Credit
+      h2 3.4M UGX
+    .card
+      h3 Supplier Dues
+      h2 9.2M UGX
+    .card
+      h3 Total Customers
+      h2 18
+  .section
+    h3 Recent Activity
+    .item
+      span Stock added
+      span Today
+    .item
+      span Sale recorded
+      span Today
+    .item
+      span Credit cleared
+      span Today

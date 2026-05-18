@@ -1,0 +1,184 @@
+/* Base Resets & Typography */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Layout Container & Card Structure */
+.container {
+    width: 100%;
+    max-width: 550px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color:#2563eb;;
+    color: #ffffff;
+    text-align: center;
+    padding: 24px;
+}
+
+.card-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    color: #0dcaf0;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+/* Form Design and Fieldsets */
+.form-section {
+    border: none;
+    margin-bottom: 25px;
+}
+
+.form-section legend {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+    width: 100%;
+    padding-bottom: 6px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.col {
+    flex: 1;
+}
+
+/* Labels and Inputs */
+label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #343a40;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #212529;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+}
+
+.help-text {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 4px;
+}
+
+/* Custom Input Group for UGX Prefix */
+.input-prefix-group {
+    display: flex;
+}
+
+.prefix {
+    background-color: #6c757d;
+    color: #ffffff;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border: 1px solid #6c757d;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    user-select: none;
+}
+
+.input-prefix-group input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.btn-primary {
+    background-color: #2563eb;;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #f8f9fa;
+}
+
+/* Native HTML5 Pseudo-class Validation Styling */
+input:invalid:focus {
+    border-color: #ea868f;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+}

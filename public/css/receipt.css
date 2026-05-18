@@ -1,0 +1,72 @@
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f6;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+        .receipt-card {
+            background: #fff;
+            width: 550px;
+            border: 1px solid #d1d9e6;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        .receipt-header {
+            background-color: #2563eb;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .receipt-header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+        .receipt-header p { margin: 5px 0 0; opacity: 0.9; font-size: 14px; }
+
+        .receipt-body { padding: 30px; }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .info-label { color: #666; font-size: 14px; }
+        .info-value { color: #333; font-weight: 600; font-size: 14px; }
+
+        .financial-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr; /* Displayed in one row */
+            gap: 10px;
+            background: #eef4fb;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 25px;
+            text-align: center;
+        }
+        .fin-box label {
+            display: block;
+            font-size: 11px;
+            color: #2563eb;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .fin-box span {
+            font-size: 16px;
+            font-weight: 800;
+            color: #333;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px dashed #d1d9e6;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .receipt-card { box-shadow: none; border: 1px solid #000; }
+            .no-print { display: none; }
+        }

@@ -1,0 +1,67 @@
+extends layout
+
+block content 
+  .container
+    .header
+      div
+        h1 Customer Deposit Scheme
+        //- Dynamically counts your database records
+        p #{(customers || []).length} Customers 
+      .text-center
+        a.btn-credit(href='/deposited') + Register Customer
+    
+    .stats-grid
+      .stat-card
+        h3 Active Customers
+        //- p #{(customers || []).length}
+        p #{(customers || []).filter(c => c.outstandingBalance > 0).length}
+      .stat-card
+        h3 Total Deposited
+        //- p 1.82M UGX
+        p #{ (customers || []).reduce((sum, c) => sum + (c.amountDeposited || 0), 0).toLocaleString() } UGX
+      .stat-card
+        h3 Completed
+        //- p 1
+        p #{(customers || []).filter(c => c.outstandingBalance <= 0).length}
+      .stat-card
+        h3 Total Outstanding Balance
+        p(style="color: #d9534f; font-weight: bold;") #{ (customers || []).reduce((sum, c) => sum + (c.outstandingBalance || 0), 0).toLocaleString() } UGX
+
+    //- 1. Fixed Indentation: Loop starts here
+    if customers && customers.length
+      each customer in customers
+        //- 2. Everything inside the loop must be indented exactly 2 spaces from the 'each' line
+        .customer-card
+          .customer-header
+            div
+              //- Uses the real database name field 'fullName'
+              strong(style='font-size: 1.2rem')= customer.fullName
+              div(style='font-size: 0.85rem; color: #7f8c8d')
+                | NIN: #{customer.nin || 'N/A'} &bull; #{customer.phonenumber}
+            //- span.badge Active
+            if customer.outstandingBalance <= 0
+              span.badge(style="background-color: #28a745; color: white; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 13px;") Paid
+            else
+              span.badge(style="background-color: #f0ad4e; color: white; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 13px;") Pending
+          
+          .info-grid
+            .info-item
+              label Product Type
+              span= customer.productname ? customer.productname.productname : 'General Hardware'
+            .info-item
+              label Quantity
+              span #{customer.quantity ? customer.quantity : 'N/A'}
+            .info-item
+              label Total Amount
+              span #{customer.total ? customer.total.toLocaleString() : '0'} UGX
+          .info-grid
+            .info-item
+              label Balance Remaining
+              span #{customer.outstandingBalance ? customer.outstandingBalance.toLocaleString() : '0'} UGX
+          
+          .text-center
+            //- Dynamically links to the record form for this specific customer using their ID
+            a.btn-login(href=`/record/${customer._id}`) Record Deposit
+    else
+      p.text-center(style="padding: 20px; color: #7f8c8d;") No registered deposits found.
+

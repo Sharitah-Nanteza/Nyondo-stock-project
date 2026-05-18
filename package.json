@@ -24,8 +24,14 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
+    "connect-mongo": "^6.0.0",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
+    "mongoose": "^9.6.0",
+    "multer": "^2.1.1",
+    "passport": "^0.7.0",
+    "passport-local-mongoose": "^9.0.3",
     "pug": "^3.0.4"
   },
   "devDependencies": {

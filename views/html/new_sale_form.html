@@ -4,14 +4,14 @@
     <meta charset="UTF-8"/>
      <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sales form</title>
-     <link rel="stylesheet" href="/css/new_sale_form.css">
+     <link rel="stylesheet" href="/public/css/new_sale_form.css">
 </head>
 <body>
 
 <div class="form-container">
     <h2>Record New Sale</h2>
 
-    <form action="/sale" method="post">
+    <form action="/addsale" method="post">
         <div class="form-group">
             <label for="name">Customer Name</label>
             <input id="name" type="text" name="name" placeholder="e.g. John Doe" required>
@@ -70,7 +70,7 @@
 
          <div class="form-group">
             <label for="total">Total</label>
-            <input id="total" type="text" name="total" placeholder="0 UGX" required>
+           <input id="total" type="text" name="total" placeholder="0 UGX" required>
         </div>
       
         <p class="info-text">

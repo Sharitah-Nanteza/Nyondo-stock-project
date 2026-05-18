@@ -1,0 +1,28 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+  title New sale form
+  link(rel='stylesheet' href='/css/stock_reg_form.css')
+.form-container
+  h2 Sales edit form
+  form(action=`/sale/edit/${sale._id}` method='post')
+    .row
+      //- .field
+      //-   label(for='product') Product Name
+      //-   input#product(type='text' name='product' value=sale.product.productname)
+      .field
+        label(for='qty') Quantity
+        input#qty(type='number' name='qty' min='1' value=sale.qty)
+      .field
+        label(for='sellingprice') Selling price(Unit Cost) (UGX)
+        input#sellingprice(type='number' name='sellingprice' value=sale.sellingprice)
+    .row
+      .field
+        label(for='customername') Customer Name
+        input#customername(type='text' name="customername" value=sale.customername required placeholder='e.g Paul Mukasa')
+      .field
+        label(for='customercontact') Customer contact
+        input#customercontact(type='number' name='customercontact' value=sale.customercontact placeholder='07xxxx' required)
+    button.btn-save(type='submit') Confirm &amp; edit  sale
+

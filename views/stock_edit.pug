@@ -1,0 +1,23 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+  title New stock form
+  link(rel='stylesheet' href='/css/stock_reg_form.css')
+.form-container
+  h2 Stock edit form
+  form(action=`/stock/edit/${stock._id}` method='post')
+    .row
+      .field
+        label(for='quantity') Quantity
+        input#qty(type='number' name='quantity' min='1' value=stock.quantity)
+      .field
+        label(for='unitcost') Unit Cost
+        input#unitcost(type='number' name='unitcost' value=stock.unitcost )  
+      .field
+        label(for='sellingprice') Selling price (UGX)
+        input#sellingprice(type='number' name='sellingprice' value=stock.sellingprice)
+
+
+    button.btn-save(type='submit') Confirm &amp; edit  stock
+

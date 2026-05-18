@@ -1,76 +1,45 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title Supplier Credits
-  link(rel='stylesheet' href='/css/supplier.css')
-h1 Supplier Credits
-p.summary 2 outstanding &middot; 9.24M UGX due
-// Top Summary
-.top-section
-  .box
-    h4 Record Credit Delivery
-    p
-      | Pending Payment
-      br
-      | 1
-      br
-      | 5.84M UGX
-  .box
-    h4 Partial Payment
-    p
-      | 1
-      br
-      | 3.40M UGX
-  .box
-    h4 Fully Paid
-    p 1
-  .box
-    h4 Total Outstanding
-    p 9.24M UGX
-// Hima Cement
-.card
-  .header
-    h3 Hima Cement
-    span.status.partial Partial
-  .info Delivery: 2026-04-05 &bull; Due: 2026-04-20 &bull; ID: SC001
-  .amounts
-    | Total Amount: 6,400,000 UGX
-    br
-    |         Amount Paid: 3,000,000 UGX
-    br
-    |         Balance: 3,400,000 UGX
-  .progress Progress: 47% paid
-  // <button class="view">View Items (1)</button>
-  .text-center
-    a.btn-record(href='supplier_form.html') + Record Payment
-// Roofings Ltd
-.card
-  .header
-    h3 Roofings Ltd
-    span.status.pending Pending
-  .info Delivery: 2026-04-08 &bull; Due: 2026-04-25 &bull; ID: SC002
-  .amounts
-    | Total Amount: 5,840,000 UGX
-    br
-    |         Amount Paid: 0 UGX
-    br
-    |         Balance: 5,840,000 UGX
-  .progress Progress: 0% paid
-  // <button class="view">View Items (2)</button>
-  .text-center
-    a.btn-record(href='supplier_form.html') + Record Payment
-// Steel Suppliers
-.card
-  .header
-    h3 Steel Suppliers
-    span.status.paid Paid
-  .info Delivery: 2026-04-01 &bull; ID: SC003
-  .amounts
-    | Total Amount: 3,025,000 UGX
-    br
-    |         Amount Paid: 3,025,000 UGX
-    br
-    |         Balance: 0 UGX
-  .progress Progress: 100% paid
-  // <button class="view">View Items (2)</button>
+extends layout
+
+block content 
+  .dashboard
+    h1 Supplier Management
+    
+    table
+      thead
+        tr
+          th Factory Name
+          th Supplier Name
+          
+          th Factory Contact
+          th Product Name
+          //- th Total
+          //- th Quantity
+          th Date
+          th Payment Status
+          if user.userrole === "stockmanager" || user.userrole === "admin"
+            th Action
+      tbody
+        each product in dbStock
+          tr
+            
+            td #{product.factoryname}
+            td #{product.suppliername}
+            
+           
+            td #{product.suppliercontact}
+            td #{product.productname}
+            //- td #{product.total}
+            //- td #{product.quantity}
+            td #{new Date(product.date).toLocaleString()}
+            td #{product.paymentstatus}
+            if user.userrole === "stockmanager" || user.userrole === "admin"
+              td 
+                .d-flex.gap-2 
+                  a.btn.btn-sm.btn-outline-warning(href=`/supplier/edit/${product._id}`)
+                    i.fas.fa-edit
+                  form(action=`/delete/${product._id}` method="post" onsubmit='return confirm("Are you sure you want to delete this item?");')
+                    button.btn.btn-sm.btn-outline-danger(type='submit')
+                      i.fas.fa-trash-alt 
+        if dbStock.length === 0
+            tr 
+            td.text-center(colspan='11') No stock has been recorded yet.

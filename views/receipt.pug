@@ -1,0 +1,57 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Transaction Receipt - Nyondo Hardware
+  link(rel='stylesheet' href='/css/receipt.css')
+.receipt-card
+  .receipt-header
+    h1 NYONDO GENERAL HARDWARE
+    p Quality Building Materials &amp; Hardware
+    p Nansana, Wakiso District - Katooke Road
+    p Tel: 0701-234567 | 0772-987654
+  .receipt-body
+    .info-row
+      span.info-label Receipt No:
+      span.info-value #{sale._id.toString().slice(-6).toUpperCase()}
+    .info-row
+      span.info-label Date: 
+      span.info-value #{new Date(sale.date).toLocaleString()}
+    .info-row
+      span.info-label Customer:
+      span.info-value #{sale.customername}
+    .info-row
+      span.info-label Product purchased:
+      span.info-value #{sale.product.productname}
+    .info-row
+      span.info-label Quantity:
+      span.info-value #{sale.qty}
+    // Financial info displayed in one row
+    .financial-summary
+      .fin-box
+        label Unit Price
+        span #{sale.sellingprice}
+      .fin-box
+        label Total Cost of the product
+        span #{sale.total}
+      .fin-box
+        label Transport Charged
+        span #{sale.transportCost}
+      .fin-box
+        label Total Charged
+        span #{sale.total + sale.transportCost}
+      //- .fin-box
+      //-   label Amount paid 
+      //-   span #{sale.amountpaid}
+      //- .fin-box
+      //-   label Balance
+      //-   span #{(sale.total + sale.transportCost) - sale.amountpaid}
+  .footer
+    p Thank you for shopping with us!
+    p Issued by: Sales Attendant - #{sale.attendant.fullname}
+    p Goods once sold are not returned
+    button.no-print(onclick='window.print()' style='margin-top: 10px; cursor: pointer')
+      | Print Receipt
+    //- button(href='/sales-list') 
+    button(onclick="window.location.href='/sales-list'")
+      | View Sales

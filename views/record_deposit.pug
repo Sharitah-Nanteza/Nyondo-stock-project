@@ -1,0 +1,44 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Record Deposit Form
+  link(rel='stylesheet' href='/css/record_deposit.css')
+.form-card
+  h2 Record New Deposit
+  form(action=`/records/${customer._id}` method='POST')
+    //- // 1. Customer Name
+    //- .input-group
+    //-   label(for='customer_name') Name of Customer
+    //-   input#customer_name(type='text' name='customer_name' placeholder='e.g. John Doe')
+    //- // 2. Current Amount
+    //- .input-group
+    //-   label(for='current_amount') Current Amount (UGX)
+    //-   input#current_amount(type='number' name='current_amount' placeholder='e.g. 456000')
+    .input-group
+      label Customer Name
+      input(type='text' value=customer.fullName disabled)
+    .input-group
+      label Current Balance Due (UGX)
+      input(type='text' value=`${customer.outstandingBalance.toLocaleString()} UGX` disabled)
+    // 3. Amount Deposited
+    .input-group
+      label(for='amount_deposited') Amount to Deposit (UGX)
+      input#amount_deposited(type='number' name='amount_deposited' placeholder='e.g. 50000')
+    // 4. Select Payment Method
+    .input-group
+      label Select Payment Method
+      .method-container
+        .method-option
+          input#cash(type='radio' name='payment' value='cash' checked)
+          label(for='cash') Cash
+        .method-option
+          input#momo(type='radio' name='payment' value='momo')
+          label(for='momo') Mobile Money
+        .method-option
+          input#bank(type='radio' name='payment' value='bank')
+          label(for='bank') Bank Transfer
+    // 6. Action Buttons
+    .form-actions
+      button.btn.btn-cancel(type='button') Cancel
+      button.btn.btn-submit(type='submit') Record Deposit

@@ -7,13 +7,14 @@ block content
         h1 Sales Recording
         p 0 sales today &middot; Revenue: 0.00M UGX
       .text-center
-        a.btn-new(href='new_sale-form.html') + New Sale
+        a.btn-new(href='/addsale') + New Sale
     // sales summary
     .stats-grid
       .stat-card
         small Total Sales (All Time)
-        h2 4
-        p(style='color:#2563eb') 4.79M UGX revenue
+        //- h2 4
+        h2 #{stats.salesToday.toLocaleString()}UGX
+        //- p(style='color:#2563eb') 4.79M UGX revenue                    
       .stat-card
         small Sales Today
         h2 0
@@ -27,54 +28,37 @@ block content
     table.sales-table
       thead
         tr
-          th Date / ID
-          th Customer
-          th Items Sold
-          th Subtotal
-          th Delivery
-          th Total
+          th Product Name 
+          th Quantity
+          th Selling Price
+          th Total 
+          //- th Total(UGX)
+          th Customer Name
+          th Customer Contact 
+          th Attendant 
+          th Date 
+          if user.userrole === "salesattendant" || user.userrole === "admin"
+          th Action 
       tbody
-        tr
-          td
-            | 2026-04-10 
-            br
-            small S001
-          td
-            strong Kampala Hardware Ltd
-            br
-            small +256700111222
-          td
-            .item-detail Cement (Hima) x 50
-            .item-detail Iron Bars (Roofings) x 30
-          td 2,680,000 UGX
-          td(style='color:#2563eb') Free
-          td.price-total 2.68M UGX
-        tr
-          td
-            | 2026-04-10 
-            br
-            small S002
-          td
-            strong John Mukasa
-            br
-            small +256750333444
-          td
-            .item-detail Cement (Hima) x 10
-            .item-detail Iron Sheets (Red) x 15
-          td 950,000 UGX
-          td(style='color:#2563eb') Free
-          td.price-total 0.95M UGX
-        tr
-          td
-            | 2026-04-09 
-            br
-            small S004
-          td
-            strong Sarah Namuli
-            br
-            small +256760777888
-          td
-            .item-detail Cement (Hima) x 5
-          td 175,000 UGX
-          td 30,000 UGX
-          td.price-total 0.20M UGX
+        each sale in dbSales
+          tr
+            td #{sale.product ? sale.product.productname:'Item deleted'}
+            td #{sale.qty}
+            td #{sale.sellingprice}
+            td #{(sale.qty)*(sale.sellingprice)} 
+            td #{sale.customername}
+            td #{sale.customercontact}
+            td #{sale.attendant ? sale.attendant.fullname:'unknown'}
+            //- td #{sale.attendant ? sale.attendant.firstname + '' + sale.attendant.lastname:'unknown' }
+            td #{new Date(sale.date).toLocaleString()}
+            if user.userrole === "salesattendant" || user.userrole === "admin"
+            td
+              .d-flex.gap-2  
+                a.btn.btn-sm.btn-outline-warning(href=`/sale/edit/${sale._id}`)
+                  i.fas.fa-edit
+                form(action=`/sale/delete/${sale._id}` method="post" onsubmit='return confirm("Are you sure you want to delete this item?");')
+                  button.btn.btn-sm.btn-outline-danger(type='submit')
+                    i.fas.fa-trash-alt 
+        if dbSales.length === 0
+          tr 
+            td.text-center(colspan='6') No sales have been recorded yet.

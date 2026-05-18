@@ -1,0 +1,67 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+  title New sale form
+  link(rel='stylesheet' href='/css/stock_reg_form.css')
+.form-container
+  h2 New sale registration form
+  form(action='/addsale' method='post')
+    .row
+      .field
+        label Product
+        select#productSelect(name='productId')
+          option(value='' disabled selected) Select product
+          each product in items 
+            option(value=product._id data-price=product.sellingprice) #{product.productname} (stock:#{product.quantity} | price:#{product.sellingprice}UGX)
+    .row
+      .field
+        label Unit
+        select(name='unit')
+          option(value='' disabled selected) Select unit
+          option(value='bag') Bag
+          option(value='piece') Piece
+          option(value='kg') Kg 
+          option(value='pack') Pack
+          option(value='roll') Roll
+          option(value='sheet') Sheet
+    .row
+      .field
+        label(for='qty') Quantity
+        input#qty(type='number' name='qty' min='1' placeholder='10')
+    .row
+      .field
+        label(for='sellingprice') Selling price
+        input#sellingprice(type='number' name='sellingprice' readonly )
+    .row
+      .field
+        label(for='customername') Customer Name
+        input#customername(type='text' name="customername" placeholder='e.g Paul Mukasa')
+      .field
+        label(for='customercontact') Customer Contact
+        input#customercontact(
+          type='text'
+          name='customercontact'
+          pattern='[7][0-9]{8}' 
+          minlength='9'
+          maxlength='9'
+          title='Enter a valid Ugandan number'
+          placeholder='7XXXXXXXX'
+        )
+    .row
+      .field
+        label(for='customeraddress') Customer Address
+        input#customeraddress(type='text' name="customeraddress" placeholder='e.g Nansana,Wakiso')
+      .field
+        label(for='customerdistance') Customer Distance (Km)
+        input#customerdistance(type='number' name='customerdistance' placeholder='1 Km')
+    button.btn-save(type='submit') Confirm &amp; Record sale
+script.
+  document.getElementById('productSelect').addEventListener('change', function() {
+    // Get the selected option
+    const selectedOption = this.options[this.selectedIndex];
+    // Extract the price from the data attribute
+    const price = selectedOption.getAttribute('data-price');
+    // Set the value of the selling price input field
+    document.getElementById('sellingprice').value = price || '';
+  });

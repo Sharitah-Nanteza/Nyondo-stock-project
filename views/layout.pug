@@ -2,9 +2,14 @@ doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css")
+  link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css")
   link(rel='stylesheet' href='/css/sales.css')
   link(rel='stylesheet' href='/css/stock.css')
+  link(rel='stylesheet' href='/css/supplier.css')
   link(rel='stylesheet' href='/css/dashboard.css')
+  link(rel='stylesheet' href='/css/deposit.css')
+  
 .sidebar
   h2 NYONDO
   p
@@ -15,17 +20,24 @@ head
     nav
       ul.nav.flex-column.mt-4
         li.nav-item
-          a.nav-link.active(href='dashboard.html') Dashboard
+        if user.userrole === "admin"
+          a.nav-link.active(href='/admin-dashboard') Dashboard
+        else if user.userrole === "stockmanager"
+          a.nav-link.active(href='/manager-dashboard') Dashboard
+        else if user.userrole === "salesattendant"
+          a.nav-link.active(href='/sales-dashboard') Dashboard
+
+        //- li.nav-item
+        //-   a.nav-link(href='/signin') Login
         li.nav-item
-          a.nav-link(href='index.html') Login
-        li.nav-item
-          a.nav-link(href='stock.html') Stock Management 
-        li.nav-item
-          a.nav-link(href='sales.html') Sales Recording
-        li.nav-item
-          a.nav-link(href='customer_deposits.html') Customer Deposits
-        li.nav-item
-          a.nav-link(href='supplier.html') Supplier Credits
-        li.nav-item
-          a.nav-link(href='credit.html') Credit Registration
+          a.nav-link(href="/stock") Stock Management 
+        if user.userrole === "admin" || user.userrole === "salesattendant"
+          li.nav-item
+            a.nav-link(href="/sales-list") Sales Recording
+        
+        if user.userrole === "admin"
+          li.nav-item
+            a.nav-link(href='/supplier') Supplier Management
+          li.nav-item
+            a.nav-link(href='/deposits') Customer Deposits
 block content           
