@@ -17,7 +17,7 @@ head
     .row
       .field
         label(for='suppliercontact') Factory Contact
-        input#suppliercontact(type='text' name='suppliercontact' pattern='[7][0-9]{8}' minlength='9', maxlength='9',  title='Enter a valid Ugandan number ' placeholder='e.g.,7XXXXXXXX ')
+        input#suppliercontact(type='text' name='suppliercontact' value=stock.suppliercontact pattern='[7][0-9]{8}' minlength='9', maxlength='9',  title='Enter a valid Ugandan number ' placeholder='e.g.,7XXXXXXXX ')
       .field
         label Payment Type
         select(name='paymentstatus')

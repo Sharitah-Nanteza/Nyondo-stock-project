@@ -40,7 +40,6 @@ const depositSchema = new mongoose.Schema({
   },
   transportCost: { 
     type: Number, 
-    // default: 0 
   },
   total: { 
     type: Number 

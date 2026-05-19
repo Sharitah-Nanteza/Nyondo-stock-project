@@ -12,8 +12,8 @@ block content
           
           th Factory Contact
           th Product Name
-          //- th Total
-          //- th Quantity
+          th Total
+          th Quantity
           th Date
           th Payment Status
           if user.userrole === "stockmanager" || user.userrole === "admin"
@@ -28,8 +28,8 @@ block content
            
             td #{product.suppliercontact}
             td #{product.productname}
-            //- td #{product.total}
-            //- td #{product.quantity}
+            td #{product.total}
+            td #{product.originalQuantity}
             td #{new Date(product.date).toLocaleString()}
             td #{product.paymentstatus}
             if user.userrole === "stockmanager" || user.userrole === "admin"

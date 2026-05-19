@@ -3,12 +3,14 @@ const router = express.Router();
 const Sale = require("../models/Sale");
 const Stock = require("../models/Stock");
 const Registration = require("../models/Registration");
+const Deposit = require("../models/Deposit");
 const {
   isSalesAttendant,
   isAdmin,
   isManager,
   isSalesAttendantOrAdmin,
 } = require("../middleware/auth");
+
 
 //Get index page
 router.get("/dashboard", (req, res) => {
@@ -34,8 +36,8 @@ router.get("/admin-dashboard", async (req, res) => {
       { $group: {_id: null, grandTotal: { $sum: "$total" }}},
       ]);
       stats.salesToday = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
-    
-    res.render("admin", { stats });
+    const customers = await Deposit.find();
+    res.render("admin", { stats,customers });
   } catch (error) {
     console.log(error.message);
     res.status(400).send("Oops! Stats not found");
