@@ -4,6 +4,12 @@ head
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
   title Transaction Receipt - Nyondo Hardware
   link(rel='stylesheet' href='/css/receipt.css')
+  style.
+    .receipt-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; font-size: 0.95em; }
+    .receipt-table th { border-bottom: 2px solid #333; text-align: left; padding: 6px 4px; font-weight: bold; }
+    .receipt-table td { padding: 8px 4px; border-bottom: 1px solid #eee; }
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
 .receipt-card
   .receipt-header
     h1 NYONDO GENERAL HARDWARE
@@ -20,38 +26,48 @@ head
     .info-row
       span.info-label Customer:
       span.info-value #{sale.customername}
-    .info-row
-      span.info-label Product purchased:
-      span.info-value #{sale.product.productname}
-    .info-row
-      span.info-label Quantity:
-      span.info-value #{sale.qty}
+    
+    //- NEW: Itemized Breakdown Table replacing the old single rows
+    table.receipt-table
+      thead
+        tr
+          th Product
+          th.text-center Qty
+          th.text-right Unit Price
+          th.text-right Total
+      tbody
+        if sale.items && sale.items.length > 0
+          each item in sale.items
+            tr
+              td #{item.product ? item.product.productname : 'Item deleted'}
+              td.text-center #{item.qty} #{item.unit || ''}
+              td.text-right #{item.sellingprice.toLocaleString()}
+              td.text-right #{(item.qty * item.sellingprice).toLocaleString()}
+        else
+          //- Fallback safety layer for any old single-product sales
+          tr
+            td #{sale.product ? sale.product.productname : 'Item deleted'}
+            td.text-center #{sale.qty} #{sale.unit || ''}
+            td.text-right #{sale.sellingprice ? sale.sellingprice.toLocaleString() : '0'}
+            td.text-right #{sale.total ? sale.total.toLocaleString() : '0'}
+
     // Financial info displayed in one row
     .financial-summary
       .fin-box
-        label Unit Price
-        span #{sale.sellingprice}
-      .fin-box
-        label Total Cost of the product
-        span #{sale.total}
+        label Total Items Cost
+        span #{sale.total ? sale.total.toLocaleString() : 0}
       .fin-box
         label Transport Charged
-        span #{sale.transportCost}
+        span #{sale.transportCost ? sale.transportCost.toLocaleString() : 0}
       .fin-box
         label Total Charged
-        span #{sale.total + sale.transportCost}
-      //- .fin-box
-      //-   label Amount paid 
-      //-   span #{sale.amountpaid}
-      //- .fin-box
-      //-   label Balance
-      //-   span #{(sale.total + sale.transportCost) - sale.amountpaid}
+        span #{((sale.total || 0) + (sale.transportCost || 0)).toLocaleString()} UGX
+
   .footer
     p Thank you for shopping with us!
-    p Issued by: Sales Attendant - #{sale.attendant.fullname}
+    p Issued by: Sales Attendant - #{sale.attendant ? sale.attendant.fullname : 'unknown'}
     p Goods once sold are not returned
     button.no-print(onclick='window.print()' style='margin-top: 10px; cursor: pointer')
       | Print Receipt
-    //- button(href='/sales-list') 
     button(onclick="window.location.href='/sales-list'")
       | View Sales

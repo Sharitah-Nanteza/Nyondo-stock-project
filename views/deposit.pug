@@ -1,3 +1,75 @@
+//- extends layout
+
+//- block content 
+//-   .container
+//-     .header
+//-       div
+//-         h1 Customer Deposit Scheme
+//-         //- Dynamically counts your database records
+//-         p #{(customers || []).length} Customers 
+//-       .text-center
+//-         a.btn-credit(href='/deposited') + Register Customer
+    
+//-     .stats-grid
+//-       .stat-card
+//-         h3 Active Customers
+//-         //- p #{(customers || []).length}
+//-         p #{(customers || []).filter(c => c.outstandingBalance > 0).length}
+//-       .stat-card
+//-         h3 Total Deposited
+//-         //- p 1.82M UGX
+//-         p #{ (customers || []).reduce((sum, c) => sum + (c.amountDeposited || 0), 0).toLocaleString() } UGX
+//-       .stat-card
+//-         h3 Completed
+//-         //- p 1
+//-         p #{(customers || []).filter(c => c.outstandingBalance <= 0).length}
+//-       .stat-card
+//-         h3 Total Outstanding Balance
+//-         p(style="color: #d9534f; font-weight: bold;") #{ (customers || []).reduce((sum, c) => sum + (c.outstandingBalance || 0), 0).toLocaleString() } UGX
+
+//-     //- 1. Fixed Indentation: Loop starts here
+//-     if customers && customers.length
+//-       each customer in customers
+//-         //- 2. Everything inside the loop must be indented exactly 2 spaces from the 'each' line
+//-         .customer-card
+//-           .customer-header
+//-             div
+//-               //- Uses the real database name field 'fullName'
+//-               strong(style='font-size: 1.2rem')= customer.fullName
+//-               div(style='font-size: 0.85rem; color: #7f8c8d')
+//-                 | NIN: #{customer.nin || 'N/A'} &bull; #{customer.phonenumber} &bull;  #{customer.customeraddress}  (#{customer.customerdistance}km)
+//-             //- span.badge Active
+//-             if customer.outstandingBalance <= 0
+//-               span.badge(style="background-color: #28a745; color: white; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 13px;") Paid
+//-             else
+//-               span.badge(style="background-color: #f0ad4e; color: white; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 13px;") Pending
+          
+//-           .info-grid
+//-             .info-item
+//-               label Product Name
+//-               span= customer.productname ? customer.productname.productname : 'General Hardware'
+//-             .info-item
+//-               label Quantity
+//-               span #{customer.quantity ? customer.quantity : 'N/A'}
+//-             .info-item
+//-               label Total Amount
+//-               span #{customer.total ? customer.total.toLocaleString() : '0'} UGX
+//-           .info-grid
+//-             .info-item
+//-               label Amount deposited
+//-               span #{customer.amountDeposited ? customer.amountDeposited.toLocaleString() : '0'} UGX
+//-             .info-item
+//-               label Balance Remaining
+//-               span #{customer.outstandingBalance ? customer.outstandingBalance.toLocaleString() : '0'} UGX
+          
+//-           .text-center
+//-             //- Dynamically links to the record form for this specific customer using their ID
+//-             a.btn-login(href=`/record/${customer._id}`) Record Deposit
+//-     else
+//-       p.text-center(style="padding: 20px; color: #7f8c8d;") No registered deposits found.
+
+
+
 extends layout
 
 block content 
@@ -5,7 +77,6 @@ block content
     .header
       div
         h1 Customer Deposit Scheme
-        //- Dynamically counts your database records
         p #{(customers || []).length} Customers 
       .text-center
         a.btn-credit(href='/deposited') + Register Customer
@@ -13,58 +84,53 @@ block content
     .stats-grid
       .stat-card
         h3 Active Customers
-        //- p #{(customers || []).length}
         p #{(customers || []).filter(c => c.outstandingBalance > 0).length}
       .stat-card
         h3 Total Deposited
-        //- p 1.82M UGX
         p #{ (customers || []).reduce((sum, c) => sum + (c.amountDeposited || 0), 0).toLocaleString() } UGX
       .stat-card
         h3 Completed
-        //- p 1
         p #{(customers || []).filter(c => c.outstandingBalance <= 0).length}
       .stat-card
         h3 Total Outstanding Balance
         p(style="color: #d9534f; font-weight: bold;") #{ (customers || []).reduce((sum, c) => sum + (c.outstandingBalance || 0), 0).toLocaleString() } UGX
 
-    //- 1. Fixed Indentation: Loop starts here
     if customers && customers.length
       each customer in customers
-        //- 2. Everything inside the loop must be indented exactly 2 spaces from the 'each' line
         .customer-card
           .customer-header
             div
-              //- Uses the real database name field 'fullName'
               strong(style='font-size: 1.2rem')= customer.fullName
               div(style='font-size: 0.85rem; color: #7f8c8d')
                 | NIN: #{customer.nin || 'N/A'} &bull; #{customer.phonenumber} &bull;  #{customer.customeraddress}  (#{customer.customerdistance}km)
-            //- span.badge Active
             if customer.outstandingBalance <= 0
               span.badge(style="background-color: #28a745; color: white; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 13px;") Paid
             else
               span.badge(style="background-color: #f0ad4e; color: white; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 13px;") Pending
           
+          //- FIXED: New dynamic list layout for multiple items
+          div(style="background: #fdfdfd; border: 1px solid #f0f4f8; border-radius: 6px; padding: 12px; margin-bottom: 15px;")
+            strong(style="font-size: 0.85rem; color: #2563eb; text-transform: uppercase; display: block; margin-bottom: 8px;") Scheme Items
+            if customer.depositedItems && customer.depositedItems.length > 0
+              each item in customer.depositedItems
+                div(style="display: flex; justify-content: space-between; font-size: 0.95rem; padding: 6px 0; border-bottom: 1px dashed #f0f4f8;")
+                  span(style="font-weight: 500;") #{item.productname ? item.productname.productname : 'General Hardware'}
+                  span(style="color: #555;") x#{item.quantity} (UGX #{item.priceAtDeposit.toLocaleString()})
+            else
+              div(style="font-size: 0.95rem; color: #7f8c8d; font-style: italic;") General Hardware Order (Legacy Record)
+
           .info-grid
-            .info-item
-              label Product Name
-              span= customer.productname ? customer.productname.productname : 'General Hardware'
-            .info-item
-              label Quantity
-              span #{customer.quantity ? customer.quantity : 'N/A'}
             .info-item
               label Total Amount
               span #{customer.total ? customer.total.toLocaleString() : '0'} UGX
-          .info-grid
             .info-item
               label Amount deposited
               span #{customer.amountDeposited ? customer.amountDeposited.toLocaleString() : '0'} UGX
             .info-item
               label Balance Remaining
-              span #{customer.outstandingBalance ? customer.outstandingBalance.toLocaleString() : '0'} UGX
+              span(style=customer.outstandingBalance > 0 ? "color: #d9534f; font-weight: bold;" : "color: #28a745; font-weight: bold;") #{customer.outstandingBalance ? customer.outstandingBalance.toLocaleString() : '0'} UGX
           
-          .text-center
-            //- Dynamically links to the record form for this specific customer using their ID
+          .text-center(style="margin-top: 15px;")
             a.btn-login(href=`/record/${customer._id}`) Record Deposit
     else
       p.text-center(style="padding: 20px; color: #7f8c8d;") No registered deposits found.
-

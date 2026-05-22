@@ -4,39 +4,21 @@ head
   meta(name='viewport' content='width=device-width, initial-scale=1')
   title New sale form
   link(rel='stylesheet' href='/css/stock_reg_form.css')
+  style.
+    .product-row { border-bottom: 1px dashed #ccc; padding-bottom: 15px; margin-bottom: 15px; }
+    .btn-add-item { background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer; margin-bottom: 15px; border-radius: 4px;}
 .form-container
+  if error
+    div(style="color: red; margin-bottom: 15px; font-weight: bold;") #{error}
   h2 New sale registration form
   form(action='/addsale' method='post')
-    .row
-      .field
-        label Product
-        select#productSelect(name='productId')
-          option(value='' disabled selected) Select product
-          each product in items 
-            option(value=product._id data-price=product.sellingprice) #{product.productname} (stock:#{product.quantity} | price:#{product.sellingprice}UGX)
-    .row
-      .field
-        label Unit
-        select(name='unit')
-          option(value='' disabled selected) Select unit
-          option(value='bag') Bag
-          option(value='piece') Piece
-          option(value='kg') Kg 
-          option(value='pack') Pack
-          option(value='roll') Roll
-          option(value='sheet') Sheet
-    .row
-      .field
-        label(for='qty') Quantity
-        input#qty(type='number' name='qty' min='1' placeholder='10')
-    .row
-      .field
-        label(for='sellingprice') Selling price
-        input#sellingprice(type='number' name='sellingprice' readonly )
+    
+    //- Customer details container
+    h3 Customer Details
     .row
       .field
         label(for='customername') Customer Name
-        input#customername(type='text' name="customername" placeholder='e.g Paul Mukasa')
+        input#customername(type='text' name="customername" required placeholder='e.g Paul Mukasa')
       .field
         label(for='customercontact') Customer Contact
         input#customercontact(
@@ -45,28 +27,82 @@ head
           pattern='[7][0-9]{8}' 
           minlength='9'
           maxlength='9'
+          required
           title='Enter a valid Ugandan number'
           placeholder='7XXXXXXXX'
         )
     .row
       .field
         label(for='customeraddress') Customer Address
-        input#customeraddress(type='text' name="customeraddress" placeholder='e.g Nansana,Wakiso')
+        input#customeraddress(type='text' name="customeraddress" required placeholder='e.g Nansana,Wakiso')
       .field
         label(for='customerdistance') Customer Distance (Km)
-        input#customerdistance(type='number' name='customerdistance' placeholder='1 Km')
+        input#customerdistance(type='number' name='customerdistance' required placeholder='1 Km')
+    
+    hr
+    h3 Products Items Ordered
+    
+    //- Dynamic container holding rows of products
+    #itemsContainer
+      .product-row
+        .row
+          .field
+            label Product
+            select.productSelect(name='productId' required onchange="updatePrice(this)")
+              option(value='' disabled selected) Select product
+              each product in items 
+                option(value=product._id data-price=product.sellingprice) #{product.productname} (stock:#{product.quantity} | price:#{product.sellingprice}UGX)
+          .field
+            label Selling price
+            input.sellingprice(type='number' name='sellingprice' readonly)
+          
+        .row
+          .field
+            label(for='qty') Quantity
+            input(type='number' name='qty' min='1' required placeholder='10')
+          .field
+            label Unit
+            select(name='unit' required)
+              option(value='' disabled selected) Select unit
+              option(value='bags') Bags
+              option(value='pieces') Pieces
+              option(value='kg') Kg 
+              option(value='packs') Packs
+              option(value='rolls') Rolls
+              option(value='sheets') Sheets
+
+    button.btn-add-item(type='button' onclick='addItemRow()') + Add Another Product
+
     .form-actions
       button.btn-save(type='submit') Confirm &amp; Record sale
       button.btn.btn-cancel(
           type='button'
           onclick="window.location.href='/sales-list'"
         ) Cancel
+
 script.
-  document.getElementById('productSelect').addEventListener('change', function() {
-    // Get the selected option
-    const selectedOption = this.options[this.selectedIndex];
-    // Extract the price from the data attribute
+  // Function to pull price data attribute on selection changes
+  function updatePrice(selectElement) {
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
     const price = selectedOption.getAttribute('data-price');
-    // Set the value of the selling price input field
-    document.getElementById('sellingprice').value = price || '';
-  });
+    // Find the selling price field within the exact same row block
+    const row = selectElement.closest('.product-row');
+    row.querySelector('.sellingprice').value = price || '';
+  }
+
+  // Function to clone a clean product input block dynamically
+  function addItemRow() {
+    const container = document.getElementById('itemsContainer');
+    const firstRow = container.querySelector('.product-row');
+    const newRow = firstRow.cloneNode(true);
+    
+    // Clear selections and text inputs in our brand new cloned row
+    newRow.querySelector('.productSelect').selectedIndex = 0;
+    newRow.querySelector('.sellingprice').value = '';
+    newRow.querySelector('input[name="qty"]').value = '';
+    newRow.querySelector('select[name="unit"]').selectedIndex = 0;
+    
+    container.appendChild(newRow);
+  }
+
+

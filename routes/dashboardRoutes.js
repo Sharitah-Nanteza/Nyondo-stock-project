@@ -18,40 +18,37 @@ router.get("/dashboard", (req, res) => {
 //ADMIN DASHBOARD
 router.get("/admin-dashboard", async (req, res) => {
   try {
+    //Calculate total stock value
+    const stockAgg = await Stock.aggregate([
+      { $group: { _id: null, grandStock: { $sum: "$total" } } },
+    ]);
+
     let stats = {
       stockValue: 0,
       salesToday: 0,
       deposits: 0,
       supplierCredits: 0,
-       lowStockCount: stockAgg.length > 0 ? stockAgg[0].lowStockCount : 0,
+      lowStockCount: stockAgg.length > 0 ? stockAgg[0].lowStockCount : 0,
     };
-    //Calculate total stock value
-    const stockAgg = await Stock.aggregate([
-      { $group: { _id: null, grandStock: { $sum: "$total" } } },
-    ]);
     stats.stockValue = stockAgg.length > 0 ? stockAgg[0].grandStock : 0;
-
     // Calculate total sales
     const salesAgg = await Sale.aggregate([
       { $group: { _id: null, grandTotal: { $sum: "$total" } } },
     ]);
     stats.salesToday = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
-          // Count products where quantity is greater than 0 AND less than or equal to 20
-          lowStockCount: {
-            $sum: {
-              $cond: [
-                {
-                  $and: [
-                    { $gt: ["$quantity", 0] },
-                    { $lte: ["$quantity", 20] }
-                  ]
-                },
-                1,
-                0
-              ]
-            }
-          }
-    
+    // Count products where quantity is greater than 0 AND less than or equal to 20
+    lowStockCount: {
+      $sum: {
+        $cond: [
+          {
+            $and: [{ $gt: ["$quantity", 0] }, { $lte: ["$quantity", 20] }],
+          },
+          1,
+          0,
+        ];
+      }
+    }
+
     const customers = await Deposit.find();
     const recentUsers = await Registration.find().sort({ _id: -1 }).limit(5);
     res.render("admin", { stats, customers, recentUsers });
@@ -85,7 +82,6 @@ router.get("/sales-dashboard", async (req, res) => {
     res.status(400).send("Oops! Stats not found");
   }
 });
-
 
 //STORE MANAGER DASHBOARD
 router.get("/manager-dashboard", async (req, res) => {
@@ -134,6 +130,5 @@ router.get("/manager-dashboard", async (req, res) => {
     res.status(400).send("Unable to pick product from the db");
   }
 });
-
 
 module.exports = router;

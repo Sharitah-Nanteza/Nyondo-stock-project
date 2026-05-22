@@ -17,6 +17,7 @@ const saleSchema = new mongoose.Schema({
     type: Number,
     required:true
   },
+  items: [{
   product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Stock",
@@ -33,7 +34,8 @@ const saleSchema = new mongoose.Schema({
   sellingprice: {
     type: Number,
     required:true
-  },
+  }
+  }],
   attendant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Registration",

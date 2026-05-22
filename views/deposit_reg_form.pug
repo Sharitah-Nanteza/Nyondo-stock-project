@@ -1,18 +1,87 @@
+//- doctype html
+//- head
+//-   meta(charset='UTF-8')
+//-   meta(name='viewport' content='width=device-width, initial-scale=1.0')
+//-   title Nyondo Hardware - Customer Deposit Registration
+//-   // Link to external CSS file
+//-   link(rel='stylesheet' href='/css/deposit_reg_form.css')
+//- .container
+//-   .card
+//-     // Card Header
+//-     .card-header
+//-       h2 Deposit Registration Scheme 
+//-       p.subtitle Nyondo General Hardware
+//-     // Card Body / Form
+//-     .card-body
+//-       form#depositForm(action='/deposit' method='POST')
+//-         // Section: Customer Info
+//-         fieldset.form-section
+//-           legend Customer Information
+//-           .form-group
+//-             label(for='fullName') Full Name
+//-             input#fullName(type='text' name='fullName' placeholder='e.g., John Mukasa' required='')
+//-           .form-row
+//-             .form-group.col
+//-               label(for='nin') NIN (National ID Number)
+//-               input#nin(type='text' name='nin' pattern='C[MF][0-9]{10}[A-Z]{3}'  placeholder='CF23MXXXXXXX' title='Enter a valid Ugandan number' )
+//-               // <span class="help-text">Format: 14 characters</span>
+//-             .form-group.col
+//-               label(for='phonenumber') Phone Number
+//-               input#phonenumber(type='text' name='phonenumber' placeholder='e.g.,7XXXXXXXX' pattern='[7][0-9]{8}' minlength='9' maxlength='9'  title='Enter a valid Ugandan number')
+//-               // <span class="help-text">Format: 07... or +256...</span>
+//-           .form-row
+//-             .form-group.col
+//-               label(for='customeraddress') Customer Address
+//-               input#customeraddress(type='text' name="customeraddress" required placeholder='e.g Nansana,Wakiso')
+//-             .form-group.col
+//-               label(for='customerdistance') Customer Distance (Km)
+//-               input#customerdistance(type='number' name='customerdistance' placeholder='1 Km')
+//-         // Section: Deposit Details
+//-         fieldset.form-section
+//-           legend Product Deposit Details
+//-           .form-group
+//-             label(for='productname') Product Name
+//-             select#productname(name='productname') 
+//-               option(value='' selected disabled) Select product
+//-               if items && items.length > 0
+//-                 each product in items 
+//-                   option(value=product._id) #{product.productname} (Stock: #{product.quantity} | Price: #{product.sellingprice} UGX)
+//-               else 
+//-                 option(disabled) No items available
+//-           .form-row
+//-             .form-group.col
+//-               label(for='quantity') Quantity
+//-               input#quantity(type='number' name='quantity' min='1' placeholder='Minimum 1' required='')
+//-             .form-group.col
+//-               label(for='amountDeposited') Amount Deposited
+//-               .input-prefix-group
+//-                 span.prefix UGX
+//-                 input#amountDeposited(type='number' name='amountDeposited' min='1000' step='500' placeholder='e.g., 50,000' required='')
+//-         // Action Buttons
+//-         .button-group
+//-           button.btn.btn-primary(type='submit')
+//-             | Register Deposit
+//-           a.btn.btn-secondary(href='/deposits') Cancel
+
+
 doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
   title Nyondo Hardware - Customer Deposit Registration
-  // Link to external CSS file
   link(rel='stylesheet' href='/css/deposit_reg_form.css')
+  style.
+    .deposit-item-row { border-bottom: 1px dotted #bbb; padding-bottom: 15px; margin-bottom: 15px; }
+    .btn-add-more { background-color: #007bff; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; margin-bottom: 15px; font-weight: bold;}
 .container
   .card
-    // Card Header
     .card-header
       h2 Deposit Registration Scheme 
       p.subtitle Nyondo General Hardware
-    // Card Body / Form
     .card-body
+      if error
+        div(style="color: red; font-weight: bold; margin-bottom: 15px;") #{error}
+      
       form#depositForm(action='/deposit' method='POST')
         // Section: Customer Info
         fieldset.form-section
@@ -23,12 +92,10 @@ head
           .form-row
             .form-group.col
               label(for='nin') NIN (National ID Number)
-              input#nin(type='text' name='nin' pattern='C[MF][0-9]{10}[A-Z]{3}'  placeholder='CF23MXXXXXXX' title='Enter a valid Ugandan number' )
-              // <span class="help-text">Format: 14 characters</span>
+              input#nin(type='text' name='nin' pattern='C[MF][0-9]{10}[A-Z]{3}' placeholder='CF23MXXXXXXX' title='Enter a valid Ugandan number')
             .form-group.col
               label(for='phonenumber') Phone Number
-              input#phonenumber(type='text' name='phonenumber' placeholder='e.g.,7XXXXXXXX' pattern='[7][0-9]{8}' minlength='9' maxlength='9'  title='Enter a valid Ugandan number')
-              // <span class="help-text">Format: 07... or +256...</span>
+              input#phonenumber(type='text' name='phonenumber' placeholder='e.g., 7XXXXXXXX' pattern='[7][0-9]{8}' minlength='9' maxlength='9' title='Enter a valid Ugandan number')
           .form-row
             .form-group.col
               label(for='customeraddress') Customer Address
@@ -36,29 +103,52 @@ head
             .form-group.col
               label(for='customerdistance') Customer Distance (Km)
               input#customerdistance(type='number' name='customerdistance' placeholder='1 Km')
+        
         // Section: Deposit Details
         fieldset.form-section
           legend Product Deposit Details
-          .form-group
-            label(for='productname') Product Name
-            select#productname(name='productname') 
-              option(value='' selected disabled) Select product
-              if items && items.length > 0
-                each product in items 
-                  option(value=product._id) #{product.productname} (Stock: #{product.quantity} | Price: #{product.sellingprice} UGX)
-              else 
-                option(disabled) No items available
+          
+          // Container for adding rows of products dynamically
+          #depositItemsWrapper
+            .deposit-item-row
+              .form-group
+                label Product Name
+                select(name='productname' required) 
+                  option(value='' selected disabled) Select product
+                  if items && items.length > 0
+                    each product in items 
+                      option(value=product._id) #{product.productname} (Stock: #{product.quantity} | Price: #{product.sellingprice} UGX)
+                  else 
+                    option(disabled) No items available
+              .form-row
+                .form-group.col
+                  label Quantity
+                  input(type='number' name='quantity' min='1' placeholder='Minimum 1' required='')
+          
+          button.btn-add-more(type='button' onclick='addDepositRow()') + Add Another Product to Scheme
+
           .form-row
             .form-group.col
-              label(for='quantity') Quantity
-              input#quantity(type='number' name='quantity' min='1' placeholder='Minimum 1' required='')
-            .form-group.col
-              label(for='amountDeposited') Amount Deposited
+              label(for='amountDeposited') Total Initial Amount Deposited
               .input-prefix-group
                 span.prefix UGX
                 input#amountDeposited(type='number' name='amountDeposited' min='1000' step='500' placeholder='e.g., 50,000' required='')
+        
         // Action Buttons
         .button-group
           button.btn.btn-primary(type='submit')
             | Register Deposit
           a.btn.btn-secondary(href='/deposits') Cancel
+
+script.
+  function addDepositRow() {
+    const wrapper = document.getElementById('depositItemsWrapper');
+    const targetRow = wrapper.querySelector('.deposit-item-row');
+    const clonedRow = targetRow.cloneNode(true);
+    
+    // Reset selections and input states inside our newly structural segment
+    clonedRow.querySelector('select[name="productname"]').selectedIndex = 0;
+    clonedRow.querySelector('input[name="quantity"]').value = '';
+    
+    wrapper.appendChild(clonedRow);
+  }

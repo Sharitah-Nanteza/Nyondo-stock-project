@@ -27,59 +27,89 @@ router.post("/addsale", isSalesAttendantOrAdmin, async (req, res) => {
     const {
       customername,
       customercontact,
+      customeraddress,
+      customerdistance,
       productId,
       qty,
       unit,
       sellingprice,
-      customeraddress,
-      customerdistance,
-      amountpaid
+      // amountpaid
     } = req.body;
 
     // Phone number validation
-    const phone = '+256' + customercontact
-
-    const product = await Stock.findById(productId);
-    if (!product) return res.status(404).send("Product not found");
-    const parsedQty = parseInt(qty, 10);
-    const parsedPrice = parseFloat(sellingprice);
+    const phone = "+256" + customercontact;
     const parsedDistance = parseFloat(customerdistance) || 0;
 
-    if (product.quantity < parsedQty) {
-      const items = await Stock.find({ quantity: { $gt: 0 } });
-      return res.render("new_sale_form", { items, error: "Not enough stock available" });
-      // return res.status(400).send("Not enough stock available");
+    const productIds = Array.isArray(productId) ? productId : [productId];
+    const quantities = Array.isArray(qty) ? qty : [qty];
+    const units = Array.isArray(unit) ? unit : [unit];
+    const sellingPrices = Array.isArray(sellingprice)
+      ? sellingprice
+      : [sellingprice];
+
+    let grandTotalItemsPrice = 0;
+    const processedItems = [];
+
+    //2. Loop through each item in the order to check inventory and process stock
+    for (let i = 0; i < productIds.length; i++) {
+      // Skip incomplete or empty rows in the form
+      if (!productIds[i]) continue;
+
+      const currentProduct = await Stock.findById(productIds[i]);
+      if (!currentProduct) {
+        const items = await Stock.find({ quantity: { $gt: 0 } });
+        return res.render("new_sale_form", {
+          items,
+          error: "One of the selected products was not found.",
+        });
+      }
+
+      const itemQty = parseInt(quantities[i], 10);
+      const itemPrice = parseFloat(sellingPrices[i]);
+
+      // Check stock availability
+      if (currentProduct.quantity < itemQty) {
+        const items = await Stock.find({ quantity: { $gt: 0 } });
+        return res.render("new_sale_form", {
+          items,
+          error: `Not enough stock for ${currentProduct.productname}. Available: ${currentProduct.quantity}`,
+        });
+      }
+
+      // Deduct inventory from the database
+      currentProduct.quantity -= itemQty;
+      await currentProduct.save();
+
+      // Track item calculations
+      grandTotalItemsPrice += itemQty * itemPrice;
+
+      // Build our item array object matching the model
+      processedItems.push({
+        product: productIds[i],
+        qty: itemQty,
+        unit: units[i],
+        sellingprice: itemPrice,
+      });
     }
 
-    // Deduct quantity sold from stock quantity and save the new quantity to the stock collection
-    product.quantity -= parsedQty;
-    await product.save();
-    //Calculate total without transport
-    const total = parsedQty * parsedPrice;
-    // Transport
     let transportCost = 0;
-    if (parsedDistance <= 10 && total >= 500000) {
+    if (parsedDistance <= 10 && grandTotalItemsPrice >= 500000) {
       transportCost = 0;
     } else {
       transportCost = 30000;
     }
-    
-    // Record the sale
+    // 4. Save everything as a single unified transaction record
     const newSale = new Sale({
       customername,
-      customercontact:phone,
-      product: productId,
-      qty:parsedQty,
-      unit,
-      sellingprice,
-      amountpaid:parseFloat(amountpaid) || 0,
+      customercontact: phone,
       customeraddress,
-      customerdistance:parsedDistance,
+      customerdistance: parsedDistance,
       transportCost,
       attendant: req.user._id,
-      total: total, //the cost of the items without transport
+      total: grandTotalItemsPrice,
+      items: processedItems, // Saving the subdocuments array
     });
-    console.log(newSale);
+
     await newSale.save();
     res.redirect(`/receipt/${newSale._id}`);
   } catch (error) {
@@ -91,20 +121,21 @@ router.post("/addsale", isSalesAttendantOrAdmin, async (req, res) => {
 //Get sales from the Db
 router.get("/sales-list", async (req, res) => {
   try {
-      let stats = {
-      salesToday: 0,};
-    
-        // Calculate total sales
-        const salesAgg = await Sale.aggregate([
-          { $group: {_id: null, grandTotal: { $sum: "$total" }}},
-          ]);
-          stats.salesToday = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
-          
+    let stats = {
+      salesToday: 0,
+    };
+
+    // Calculate total sales
+    const salesAgg = await Sale.aggregate([
+      { $group: { _id: null, grandTotal: { $sum: "$total" } } },
+    ]);
+    stats.salesToday = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
+
     const dbSales = await Sale.find()
-      .populate("product", "productname category")
+      .populate("items.product", "productname category")
       .populate("attendant", "fullname")
       .sort({ date: -1 });
-    res.render("sales", { dbSales, user: req.user , stats});
+    res.render("sales", { dbSales, user: req.user, stats });
   } catch (error) {
     console.error(error.message);
     res.status(400).send("Unable to pick sales from the db");
@@ -158,12 +189,13 @@ router.post("/sale/delete/:id", async (req, res) => {
 router.get("/receipt/:id", async (req, res) => {
   try {
     const sale = await Sale.findById(req.params.id)
-      .populate("product", "productname category")
+      .populate("items.product", "productname category")
       .populate("attendant", "fullname");
     if (!sale) return res.status(404).send("Receipt not found.");
     res.render("receipt", { sale });
   } catch (error) {
     console.error(error.message);
+    res.status(500).send("Server error generating receipt");
   }
 });
 

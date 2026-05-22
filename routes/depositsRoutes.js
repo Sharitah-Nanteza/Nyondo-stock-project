@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Deposit = require("../models/Deposit");
 const Stock = require("../models/Stock");
-//Deposit_form to be filled
+
+// 1. Fetch Form View
 router.get("/deposited", async (req, res) => {
   try {
-    //Query MongoDb for only 8 products
     const materials = await Stock.find({
       productname: {
         $in: [
@@ -27,135 +27,153 @@ router.get("/deposited", async (req, res) => {
   }
 });
 
+// 2. Submit New Multi-Item Deposit
 router.post("/deposit", async (req, res) => {
   try {
     const {
       fullName,
       nin,
       phonenumber,
-      productname,
+      productname,        
       customeraddress,
       customerdistance,
-      quantity,
+      quantity,          
       amountDeposited,
     } = req.body;
 
-    // Phone number validation
     const phone = "+256" + phonenumber;
+    const parsedDistance = parseFloat(customerdistance) || 0;
 
-    // Fetching product from the stock collection
-    const productDetails = await Stock.findById(productname);
-    if (!productDetails) {
-      throw new Error("Product selected could not be found in available stock");
+    // Normalize data inputs into arrays so processing loops function identically
+    const productIds = Array.isArray(productname) ? productname : [productname];
+    const quantities = Array.isArray(quantity) ? quantity : [quantity];
+
+    let totalItemsValue = 0;
+    const itemsToProcess = [];
+
+    // Process every hardware product submission line iteratively
+    for (let i = 0; i < productIds.length; i++) {
+      if (!productIds[i]) continue; 
+
+      const productDetails = await Stock.findById(productIds[i]);
+      if (!productDetails) {
+        const materials = await Stock.find({ productname: { $in: ["Cement CEM IIN", "Cement CEM IIIN", "Iron Bars 10mm", "Iron Bars 12mm", "Iron Bars 16mm", "Iron Sheets Gauge 28 (Red)", "Iron Sheets Gauge 28 (Green)", "Iron Sheets Gauge 30 (Blue)"] } });
+        return res.status(404).render("deposit_reg_form", { items: materials, error: "One of the chosen products was not found." });
+      }
+
+      const orderQty = parseInt(quantities[i], 10);
+      
+      // Stock allocation safety validation
+      if (productDetails.quantity < orderQty) {
+        const materials = await Stock.find({ productname: { $in: ["Cement CEM IIN", "Cement CEM IIIN", "Iron Bars 10mm", "Iron Bars 12mm", "Iron Bars 16mm", "Iron Sheets Gauge 28 (Red)", "Iron Sheets Gauge 28 (Green)", "Iron Sheets Gauge 30 (Blue)"] } });
+        return res.status(400).render("deposit_reg_form", { 
+          items: materials, 
+          error: `Insufficient stock for ${productDetails.productname}. Available: ${productDetails.quantity}` 
+        });
+      }
+
+      // Deduct inventory stock allocation balance
+      productDetails.quantity -= orderQty;
+      await productDetails.save();
+
+      const rowPrice = parseFloat(productDetails.sellingprice);
+      totalItemsValue += (orderQty * rowPrice);
+
+      // FIXED: Pushing exact property names matching your schema layout
+      itemsToProcess.push({
+        productname: productIds[i], 
+        quantity: orderQty,         
+        priceAtDeposit: rowPrice
+      });
     }
 
-    //Fetching the selling price from the database
-    const currentPrice = productDetails.sellingprice;
+    // Transport calculation rules
+    let transportCost = (parsedDistance <= 10 && totalItemsValue >= 500000) ? 0 : 30000;
 
-    // Deduct quantity sold from stock quantity and save the new quantity to the stock collection
-    const orderQty = parseInt(quantity);
-    productDetails.quantity -= orderQty;
-    await productDetails.save();
-    const total = orderQty * parseFloat(currentPrice);
-    // Transport
-    let transportCost = 0;
-    if (customerdistance <= 10 && total >= 500000) {
-      transportCost = 0;
-    } else {
-      transportCost = 30000;
-    }
-    //Total calculation
-    const totalCost = total + transportCost;
-    //Balance
-    const balance = totalCost - parseFloat(amountDeposited);
+    const overallCost = totalItemsValue + transportCost;
+    const upfrontPayment = parseFloat(amountDeposited) || 0;
+    const dynamicBalance = overallCost - upfrontPayment;
 
     const newDeposit = new Deposit({
       fullName,
       nin,
       phonenumber: phone,
-      productname,
       customeraddress,
-      customerdistance,
-      quantity: orderQty,
-      amountDeposited: parseFloat(amountDeposited),
+      customerdistance: parsedDistance,
+      amountDeposited: upfrontPayment,
       transportCost,
-      total: totalCost,
-      outstandingBalance: balance,
+      total: overallCost,
+      outstandingBalance: dynamicBalance,
+      depositedItems: itemsToProcess 
     });
 
-    // console.log(newDeposit);
     await newDeposit.save();
-    res.render("a", { customer: newDeposit });
-    // return res.redirect("/deposits");
+    
+    // FIXED: Render the populated customer object so the items and names show up instantly on the receipt view
+    const populatedCustomer = await Deposit.findById(newDeposit._id).populate("depositedItems.productname");
+    res.render("a", { customer: populatedCustomer });
+
   } catch (error) {
     console.error("Submission failed:", error);
-    // res.render('deposit_reg_form', {error:error.message});
-    return res.status(500).render("deposit_reg_form", { error: error.message });
+    const materials = await Stock.find({ productname: { $in: ["Cement CEM IIN", "Cement CEM IIIN", "Iron Bars 10mm", "Iron Bars 12mm", "Iron Bars 16mm", "Iron Sheets Gauge 28 (Red)", "Iron Sheets Gauge 28 (Green)", "Iron Sheets Gauge 30 (Blue)"] } });
+    return res.status(500).render("deposit_reg_form", { items: materials, error: error.message });
   }
-  // console.log(req.body)
-  //   res.redirect("/deposits");
 });
-//Customer deposits
+
+// 3. Customer Dashboard View
 router.get("/deposits", async (req, res) => {
   try {
-    const records = await Deposit.find({}).populate("productname");
+    // 1. Get ONLY the latest 3 records to display as view cards
+    const limitedRecords = await Deposit.find()
+      .populate("depositedItems.productname")
+      .sort({ createdAt: -1 })
+      .limit(3);
 
-    res.render("deposit", { customers: records });
+    // 2. Pass those 3 limited records down to your Pug template loop variable
+    res.render("deposit", { customers: limitedRecords });
   } catch (error) {
     console.error("Failed to load dashboard:", error);
-    // Fallback: send an empty array so the page doesn't crash if the DB fails
-    res
-      .status(500)
-      .render("deposit", { customers: [], error: "Database error" });
+    res.status(500).render("deposit", { customers: [], error: "Database error" });
   }
-  // res.render("deposit");
 });
 
-//Record deposits
+// 4. Fetch Individual Installment Form
 router.get("/record/:id", async (req, res) => {
   try {
     const customerData = await Deposit.findById(req.params.id);
-    if (!customerData) {
-      return res.status(404).send("Customer not found");
-    }
+    if (!customerData) return res.status(404).send("Customer not found");
     res.render("record_deposit", { customer: customerData });
   } catch (error) {
-    console.error("Error loading record deposit form:", error);
+    console.error("Error loading form:", error);
     res.status(500).send("Server Error loading form");
   }
-
 });
+
+// 5. Save Incoming Installment Payment
 router.post("/records/:id", async (req, res) => {
   try {
     const { amount_deposited, payment } = req.body;
     const newPayment = parseFloat(amount_deposited) || 0;
 
     const customer = await Deposit.findById(req.params.id);
-
-    if (!customer) {
-      return res.status(404).send("Customer profile not found");
-    }
+    if (!customer) return res.status(404).send("Customer profile not found");
 
     customer.outstandingBalance -= newPayment;
-    // Add the money paid to the total record track of historical deposits
     customer.amountDeposited += newPayment;
 
     customer.paymentHistory.push({
       amount: newPayment,
-      paymentMethod: payment || "cash", // Falls back to cash if missing
+      paymentMethod: payment || "cash",
     });
     await customer.save();
-    // res.redirect("/deposits");
-    const customerData = await Deposit.findById(req.params.id).populate("productname");
+    
+    // FIXED: Changed population target field to productname
+    const customerData = await Deposit.findById(req.params.id).populate("depositedItems.productname");
     res.render("a", { customer: customerData });
   } catch (error) {
     console.error("Failed to process transaction update:", error);
     res.status(500).send("Internal Server Error processing deposit");
   }
-  // console.log(req.body);
-  // res.redirect("/deposits");
 });
-
-//
 
 module.exports = router;

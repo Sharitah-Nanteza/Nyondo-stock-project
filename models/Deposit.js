@@ -24,7 +24,8 @@ const depositSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-
+depositedItems: [
+    {
   productname: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Stock",
@@ -34,6 +35,12 @@ const depositSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  priceAtDeposit: {
+        type: Number,
+        required: true
+      }
+}
+  ],
   amountDeposited: {
     type: Number,
     required: true,
