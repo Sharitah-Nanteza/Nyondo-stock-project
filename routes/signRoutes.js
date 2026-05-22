@@ -9,11 +9,11 @@ const {
   isSalesAttendantOrAdmin,
 } = require("../middleware/auth");
 //Users register.
-router.get("/registration", isAdmin, async (req, res) => {
+router.get("/registration",  async (req, res) => {
   res.render("user_registration");
 });
 
-router.post("/register", isAdmin,  async (req, res) => {
+router.post("/register",   async (req, res) => {
   try {
     const { fullname, email, phonenumber, nin, userrole, password } = req.body;
 

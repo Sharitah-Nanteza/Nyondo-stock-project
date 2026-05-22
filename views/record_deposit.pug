@@ -40,5 +40,12 @@ head
           label(for='bank') Bank Transfer
     // 6. Action Buttons
     .form-actions
-      button.btn.btn-cancel(type='button') Cancel
-      button.btn.btn-submit(type='submit') Record Deposit
+      //- button.btn.btn-cancel(type='button') Cancel
+      button.btn.btn-submit(type='submit') 
+        | Record Deposit
+      //- a.btn.btn-secondary(href='/deposits') Cancel 
+      button.btn.btn-cancel(
+          type='button'
+          onclick="window.location.href='/deposits'"
+        ) Cancel
+

@@ -37,7 +37,7 @@ block content
               //- Uses the real database name field 'fullName'
               strong(style='font-size: 1.2rem')= customer.fullName
               div(style='font-size: 0.85rem; color: #7f8c8d')
-                | NIN: #{customer.nin || 'N/A'} &bull; #{customer.phonenumber}
+                | NIN: #{customer.nin || 'N/A'} &bull; #{customer.phonenumber} &bull;  #{customer.customeraddress}  (#{customer.customerdistance}km)
             //- span.badge Active
             if customer.outstandingBalance <= 0
               span.badge(style="background-color: #28a745; color: white; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 13px;") Paid
@@ -46,7 +46,7 @@ block content
           
           .info-grid
             .info-item
-              label Product Type
+              label Product Name
               span= customer.productname ? customer.productname.productname : 'General Hardware'
             .info-item
               label Quantity
@@ -55,6 +55,9 @@ block content
               label Total Amount
               span #{customer.total ? customer.total.toLocaleString() : '0'} UGX
           .info-grid
+            .info-item
+              label Amount deposited
+              span #{customer.amountDeposited ? customer.amountDeposited.toLocaleString() : '0'} UGX
             .info-item
               label Balance Remaining
               span #{customer.outstandingBalance ? customer.outstandingBalance.toLocaleString() : '0'} UGX

@@ -13,7 +13,7 @@ body {
 /* SIDEBAR */
 .sidebar {
   width: 240px;
-  height: 100vh;
+  /* height: 100vh; */
   background: #2563eb;
   color: white;
   padding: 20px;

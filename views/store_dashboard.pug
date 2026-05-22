@@ -19,18 +19,29 @@ head
       h2 #{stats.stockValue.toLocaleString()}UGX
     .card
       h3 Low Stock
-      h2 5
+      h2 #{stats.lowStockCount}
     .card
       h3 Out of Stock
-      h2 2
+      h2 #{stats.outOfStockCount}
     .card
       h3 Items
-      h2 320
+      h2 #{stats.totalProducts}
   .section
     h3 Stock Alerts
-    .item
-      span Wire Mesh
-      span Low
-    .item
-      span Nails
-      span Critical
+    each item in dbStock
+      if item.quantity === 0
+        .item
+          span #{item.productname}
+          span(style="color: red; font-weight: bold;") Out of Stock
+      else if item.quantity <= 20
+        .item
+          span #{item.productname}
+          span(style="color: orange;") Low Stock (#{item.quantity} left)
+    else
+      p No stock alerts at the moment!
+    //- .item
+    //-   span Wire Mesh
+    //-   span Low
+    //- .item
+    //-   span Nails
+    //-   span Critical

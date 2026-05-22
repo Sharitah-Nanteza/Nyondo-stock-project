@@ -55,7 +55,12 @@ head
       .field
         label(for='customerdistance') Customer Distance (Km)
         input#customerdistance(type='number' name='customerdistance' placeholder='1 Km')
-    button.btn-save(type='submit') Confirm &amp; Record sale
+    .form-actions
+      button.btn-save(type='submit') Confirm &amp; Record sale
+      button.btn.btn-cancel(
+          type='button'
+          onclick="window.location.href='/sales-list'"
+        ) Cancel
 script.
   document.getElementById('productSelect').addEventListener('change', function() {
     // Get the selected option

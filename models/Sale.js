@@ -45,9 +45,9 @@ const saleSchema = new mongoose.Schema({
   transportCost: {
     type: Number,
   },
-  amountpaid: {
-    type: Number,
-  },
+  // amountpaid: {
+  //   type: Number,
+  // },
   total: {
     type: Number,
   },

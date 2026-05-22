@@ -5,17 +5,9 @@ block content
     h1 Stock Management
     p.stats
       | 17 products &middot; Total Stock value: #{stats.stockValue.toLocaleString()}UGX
-    .controls
-      .text-center
-        a.btn-add(href='/add_stock') + Add Stock
-      select(name='Categories')
-        option(value='' disabled selected) All Categories
-        option(value='cement') Cement
-        option(value='bars') Iron Bars
-        option(value='nails') Nails
-        option(value='wheelbarrows') Wheelbarrows
-        option(value='wire') Wire
-        option(value='iron_sheets') Iron Sheets
+    //- .controls
+    .text-center
+    a.btn-add(href='/add_stock') + Add Stock
     table
       thead
         tr
@@ -42,12 +34,18 @@ block content
               img(src='/'+product.image alt='Product image' width='80px' height='80px')
             //- td #{product.category}
             //- td #{product.unit}
-            
+            td
+              if product.quantity === 0
+                span.badge.bg-danger Out of Stock
+              else if product.quantity <= 20
+                span.badge.bg-warning.text-dark Low Stock (#{product.quantity})
+              else
+                span.text-success #{product.quantity}
            
             //- td #{product.factoryname}
             //- td #{product.suppliercontact}
             //- td #{product.suppliername}
-            td #{product.quantity}
+            //- td #{product.quantity}
             td #{product.unitcost}
             td #{(product.quantity)*(product.unitcost)} 
             td #{product.sellingprice}

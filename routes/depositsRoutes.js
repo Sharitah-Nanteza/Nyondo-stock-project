@@ -85,7 +85,8 @@ router.post("/deposit", async (req, res) => {
 
     // console.log(newDeposit);
     await newDeposit.save();
-    return res.redirect("/deposits");
+    res.render("a", { customer: newDeposit });
+    // return res.redirect("/deposits");
   } catch (error) {
     console.error("Submission failed:", error);
     // res.render('deposit_reg_form', {error:error.message});
@@ -122,9 +123,7 @@ router.get("/record/:id", async (req, res) => {
     console.error("Error loading record deposit form:", error);
     res.status(500).send("Server Error loading form");
   }
-  // console.log(req.body);
 
-  // res.render("record_deposit");
 });
 router.post("/records/:id", async (req, res) => {
   try {

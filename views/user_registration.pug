@@ -33,5 +33,10 @@ head
     .form-group
       label(for='password') Password
       input#password(type='password' name='password' placeholder='At least 6 characters')
-    button(type='submit') Create Account
+    .button-group
+      button(type='submit') Create Account
+      a.btn-secondary(href='/admin-dashboard') Cancel
+    //- .button-group
+    //-   button(type='submit') Create Account
+    //-   a.btn.btn-secondary(href='/admin-dashboard') Cancel
 
