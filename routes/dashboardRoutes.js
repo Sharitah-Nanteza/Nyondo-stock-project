@@ -20,17 +20,45 @@ router.get("/admin-dashboard", async (req, res) => {
   try {
     //Calculate total stock value
     const stockAgg = await Stock.aggregate([
-      { $group: { _id: null, grandStock: { $sum: "$total" } } },
+      {
+        $group: {
+          _id: null,
+          grandStock: { $sum: "$total" },
+          // Count products where quantity is exactly 0
+          outOfStockCount: {
+            $sum: { $cond: [{ $eq: ["$quantity", 0] }, 1, 0] },
+          },
+          // Count products where quantity is greater than 0 AND less than or equal to 20
+          lowStockCount: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $gt: ["$quantity", 0] },
+                    { $lte: ["$quantity", 20] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+        },
+      },
     ]);
 
     let stats = {
-      stockValue: 0,
+      stockValue: stockAgg.length > 0 ? stockAgg[0].grandStock : 0,
+      outOfStockCount: stockAgg.length > 0 ? stockAgg[0].outOfStockCount : 0,
       salesToday: 0,
       deposits: 0,
       supplierCredits: 0,
       lowStockCount: stockAgg.length > 0 ? stockAgg[0].lowStockCount : 0,
     };
-    stats.stockValue = stockAgg.length > 0 ? stockAgg[0].grandStock : 0;
+        const dbStock = await Stock.find()
+      .sort({ date: -1 });
+    stats.totalProducts = dbStock.length;
+    
     // Calculate total sales
     const salesAgg = await Sale.aggregate([
       { $group: { _id: null, grandTotal: { $sum: "$total" } } },

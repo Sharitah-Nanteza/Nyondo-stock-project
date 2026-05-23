@@ -1,8 +1,71 @@
 extends layout
 
 block content 
+  //- Custom inline CSS styling to fix card stretching and badge contrast cleanly
+  style.
+    .metrics-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .mini-card {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 0.75rem 1.2rem;
+      min-width: 220px;
+      max-width: 280px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .mini-card-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6c757d;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .mini-card-value {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin: 0;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      text-align: center;
+      min-width: 80px;
+    }
+    .badge-credit {
+      background-color: #dc3545 !important;
+      color: #ffffff !important;
+    }
+    .badge-paid {
+      background-color: #198754 !important;
+      color: #ffffff !important;
+    }
+    .badge-other {
+      background-color: #6c757d !important;
+      color: #ffffff !important;
+    }
+
   .dashboard
     h1 Supplier Management
+    
+    //- Custom Compact Metrics Bar (Stays tiny, won't stretch across the screen)
+    .metrics-row
+      .mini-card
+        div.mini-card-label Supplier Dues
+        p.mini-card-value.text-danger UGX #{stats.totalSupplierDues.toLocaleString()}
+      .mini-card
+        div.mini-card-label Total Stock Value
+        p.mini-card-value.text-primary UGX #{stats.stockValue.toLocaleString()}
     
     //- Action Controls Section (Aligns the toggle button cleanly to the right side at the top)
     .d-flex.justify-content-end.mb-3
@@ -16,11 +79,11 @@ block content
           th Supplier Name
           th Factory Contact
           th Product Name
-          th Total
           th Quantity
+          th Total
           th Date
           th Payment Status
-          if user.userrole === "stockmanager" || user.userrole === "admin"
+          if user && (user.userrole === "stockmanager" || user.userrole === "admin")
             th Action
       tbody
         each product, index in dbStock
@@ -30,11 +93,20 @@ block content
             td #{product.suppliername}
             td #{product.suppliercontact}
             td #{product.productname}
-            td #{product.total}
             td #{product.originalQuantity}
+            td.fw-bold UGX #{product.total.toLocaleString()}
             td #{new Date(product.date).toLocaleString()}
-            td #{product.paymentstatus}
-            if user.userrole === "stockmanager" || user.userrole === "admin"
+            
+            //- Clean Status Badges with forced visibility styles
+            td
+              if product.paymentstatus && product.paymentstatus.toLowerCase() === 'credit'
+                span.status-badge.badge-credit Credit
+              else if product.paymentstatus && product.paymentstatus.toLowerCase() === 'paid'
+                span.status-badge.badge-paid Paid
+              else
+                span.status-badge.badge-other #{product.paymentstatus}
+                
+            if user && (user.userrole === "stockmanager" || user.userrole === "admin")
               td 
                 .d-flex.gap-2 
                   a.btn.btn-sm.btn-outline-warning(href=`/supplier/edit/${product._id}`)
@@ -42,15 +114,19 @@ block content
                   form(action=`/delete/${product._id}` method="post" onsubmit='return confirm("Are you sure you want to delete this item?");')
                     button.btn.btn-sm.btn-outline-danger(type='submit')
                       i.fas.fa-trash-alt 
+                      
         if dbStock.length === 0
+          - const colSpanCount = user && (user.userrole === "stockmanager" || user.userrole === "admin") ? 9 : 8
           tr 
-            td.text-center(colspan='9') No supplier records have been found.
+            td.text-center(colspan=colSpanCount) No supplier records have been found.
 
   //- Reusable script tailored for the supplier page
   script.
     function toggleExtraRows() {
       const extraRows = document.querySelectorAll('.extra-row');
       const btn = document.getElementById('toggleRowsBtn');
+      
+      if (extraRows.length === 0) return;
       
       const isHidden = extraRows[0].classList.contains('d-none');
       

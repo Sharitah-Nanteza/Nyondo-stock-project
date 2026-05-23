@@ -18,14 +18,14 @@ head
       h3 Total Stock
       h2 #{stats.stockValue.toLocaleString()}UGX
     .card
+      h3 Items
+      h2 #{stats.totalProducts}
+    .card
       h3 Low Stock
       h2 #{stats.lowStockCount}
     .card
       h3 Out of Stock
       h2 #{stats.outOfStockCount}
-    .card
-      h3 Items
-      h2 #{stats.totalProducts}
   .section
     h3 Stock Alerts
     each item in dbStock

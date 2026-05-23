@@ -128,16 +128,28 @@ router.get("/supplier", async (req, res) => {
   try {
     let stats = {
       stockValue: 0,
+      totalSupplierDues: 0, // 1. Added a parking spot for our dues
     };
-    //Calculate total stock value
+
+    // Calculate total stock value
     const stockAgg = await Stock.aggregate([
       { $group: { _id: null, grandStock: { $sum: "$total" } } },
     ]);
     stats.stockValue = stockAgg.length > 0 ? stockAgg[0].grandStock : 0;
+
+    // Fetch the raw stock data
     const dbStock = await Stock.find()
       // .populate("productname category")
       .sort({ date: -1 });
-    console.log("dbStock:", dbStock);
+
+    // 2. Calculate the total dues from the dbStock array we just fetched
+    stats.totalSupplierDues = dbStock
+      .filter(product => product.paymentstatus && product.paymentstatus.toLowerCase() === 'credit')
+      .reduce((sum, product) => sum + (Number(product.total) || 0), 0);
+
+    console.log("dbStock fetched. Total credit dues calculated:", stats.totalSupplierDues);
+    
+    // 3. Send it off to the Pug view! Note that stats now includes totalSupplierDues
     res.render("supplier", { dbStock, stats });
   } catch (error) {
     console.error(error.message);

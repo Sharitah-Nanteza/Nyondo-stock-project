@@ -21,11 +21,17 @@ head
       h3 Stock Value
       h2 #{stats.stockValue.toLocaleString()}UGX
     .card
-      h3 Sales Today
+      h3 Sales Value
       h2 #{stats.salesToday.toLocaleString()}UGX
+    .card
+      h3 Total Items
+      h2 #{stats.totalProducts}
     .card
       h3 Low Stock
       h2 #{stats.lowStockCount}
+    .card
+      h3 Out of Stock
+      h2 #{stats.outOfStockCount}
     .card
       h3 Customer outstanding balance 
       h2(style="color: #d9534f; font-weight: bold;") #{ (customers || []).reduce((sum, c) => sum + (c.outstandingBalance || 0), 0).toLocaleString() } UGX
