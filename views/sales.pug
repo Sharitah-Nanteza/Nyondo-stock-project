@@ -8,6 +8,7 @@ block content
         p 0 sales today &middot; Revenue: 0.00M UGX
       .text-center
         a.btn-new(href='/addsale') + New Sale
+    
     // sales summary
     .stats-grid
       .stat-card
@@ -21,8 +22,13 @@ block content
         small Average Sale Value
         h2 1.20M
         p Per transaction
-    // recent transaction table
-    h3 Recent Transactions
+    
+    //- Action Controls Section (Aligns the toggle button cleanly to the right side above the table)
+    .d-flex.justify-content-between.align-items-center.mt-4.mb-2
+      h3(style="margin: 0;") Recent Transactions
+      if dbSales.length > 5
+        button#toggleRowsBtn.btn.btn-outline-primary(type="button" onclick="toggleExtraRows()") View All Sales
+
     table.sales-table
       thead
         tr
@@ -37,10 +43,11 @@ block content
           if user.userrole === "salesattendant" || user.userrole === "admin"
             th Action 
       tbody
-        //- Loop through every complete transaction record
-        each sale in dbSales
-          tr
-            //- 1. Product Name Column (Lists all items stacked)
+        //- Loop through every complete transaction record with index tracking
+        each sale, index in dbSales
+          //- If the invoice index is 5 or greater, hide the whole row by default
+          tr(class=index >= 5 ? 'extra-row d-none' : '')
+            //- 1. Product Name Column
             td
               each item in sale.items
                 div(style="margin-bottom: 4px;") #{item.product ? item.product.productname : 'Item deleted'}
@@ -77,3 +84,22 @@ block content
         if dbSales.length === 0
           tr 
             td.text-center(colspan='9') No sales have been recorded yet.
+
+  //- Reusable script tailored for the sales page
+  script.
+    function toggleExtraRows() {
+      const extraRows = document.querySelectorAll('.extra-row');
+      const btn = document.getElementById('toggleRowsBtn');
+      
+      const isHidden = extraRows[0].classList.contains('d-none');
+      
+      extraRows.forEach(row => {
+        if (isHidden) {
+          row.classList.remove('d-none');
+          btn.innerText = 'Show Less';
+        } else {
+          row.classList.add('d-none');
+          btn.innerText = 'View All Sales';
+        }
+      });
+    }

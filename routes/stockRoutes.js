@@ -19,6 +19,7 @@ let storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
+//initializing multer
 let upload = multer({ storage: storage });
 
 //Add stock to the Db
@@ -42,12 +43,10 @@ router.post("/add_stock", upload.single("image"), async (req, res) => {
     } = req.body;
 
     // Phone number validation
-    const phone = '+256'+suppliercontact
+    const phone = "+256" + suppliercontact;
     // Selling price validation
     if (parseFloat(sellingprice) < parseFloat(unitcost)) {
-      return res
-        .status(400)
-        .send("Selling price is less than the unitcost!");
+      return res.status(400).send("Selling price is less than the unitcost!");
     }
     const total = parseInt(quantity) * parseFloat(unitcost);
     const newProduct = new Stock({
@@ -61,7 +60,7 @@ router.post("/add_stock", upload.single("image"), async (req, res) => {
       sellingprice,
       factoryname,
       suppliername,
-      suppliercontact:phone,
+      suppliercontact: phone,
       paymentstatus,
       total,
     });
@@ -75,15 +74,7 @@ router.post("/add_stock", upload.single("image"), async (req, res) => {
 //Get stock from the Db
 router.get("/stock", async (req, res) => {
   try {
-    // let stats = {
-    //   stockValue: 0,
-    // };
-    //Calculate total stock value
-    // const stockAgg = await Stock.aggregate([
-    //   { $group: { _id: null, grandStock: { $sum: "$total" } } },
-    // ]);
-    // stats.stockValue = stockAgg.length > 0 ? stockAgg[0].grandStock : 0;
-
+    //Calculating statistics (aggregation pipeline)
     const stockAgg = await Stock.aggregate([
       {
         $group: {
@@ -91,7 +82,7 @@ router.get("/stock", async (req, res) => {
           grandStock: { $sum: "$total" },
           // Count products where quantity is exactly 0
           outOfStockCount: {
-            $sum: { $cond: [{ $eq: ["$quantity", 0] }, 1, 0] }
+            $sum: { $cond: [{ $eq: ["$quantity", 0] }, 1, 0] },
           },
           // Count products where quantity is greater than 0 AND less than or equal to 20
           lowStockCount: {
@@ -100,35 +91,38 @@ router.get("/stock", async (req, res) => {
                 {
                   $and: [
                     { $gt: ["$quantity", 0] },
-                    { $lte: ["$quantity", 20] }
-                  ]
+                    { $lte: ["$quantity", 20] },
+                  ],
                 },
                 1,
-                0
-              ]
-            }
-          }
-        }
-      }
+                0,
+              ],
+            },
+          },
+        },
+      },
     ]);
-    // 2. Format the stats object safely (with defaults if the database is empty)
+    //Safe guarding the data(I used ternary operators so that in case of an empty array, no fatal error is thrown)
     let stats = {
       stockValue: stockAgg.length > 0 ? stockAgg[0].grandStock : 0,
       outOfStockCount: stockAgg.length > 0 ? stockAgg[0].outOfStockCount : 0,
       lowStockCount: stockAgg.length > 0 ? stockAgg[0].lowStockCount : 0,
     };
+    //Fetching the full product list .
     const dbStock = await Stock.find()
       // .populate("productname category")
       .sort({ date: -1 });
-      stats.totalProducts = dbStock.length;
-    console.log("dbStock:", dbStock);
-    res.render("stock", { dbStock,stats, user: req.user || {}  });
+    stats.totalProducts = dbStock.length;
+    // console.log("dbStock:", dbStock);
+    //And finally am good to render the UI, empty if no logging in
+    res.render("stock", { dbStock, stats, user: req.user || {} });
+
+    //Error handling!
   } catch (error) {
     console.error(error.message);
     res.status(400).send("Unable to pick product from the db");
   }
 });
-
 
 router.get("/supplier", async (req, res) => {
   try {
@@ -190,7 +184,6 @@ router.post("/delete/:id", async (req, res) => {
 
 // Supplier
 
-
 router.get("/supplier/edit/:id", async (req, res) => {
   try {
     const stock = await Stock.findById(req.params.id);
@@ -205,7 +198,7 @@ router.post("/supplier/edit/:id", async (req, res) => {
   try {
     const { paymentstatus } = req.body;
     await Stock.findByIdAndUpdate(req.params.id, {
-   paymentstatus
+      paymentstatus,
     });
     res.redirect("/supplier");
   } catch (error) {

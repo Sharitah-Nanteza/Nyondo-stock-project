@@ -4,12 +4,16 @@ block content
   .dashboard
     h1 Supplier Management
     
+    //- Action Controls Section (Aligns the toggle button cleanly to the right side at the top)
+    .d-flex.justify-content-end.mb-3
+      if dbStock.length > 5
+        button#toggleRowsBtn.btn.btn-outline-primary(type="button" onclick="toggleExtraRows()") View All Suppliers
+    
     table
       thead
         tr
           th Factory Name
           th Supplier Name
-          
           th Factory Contact
           th Product Name
           th Total
@@ -19,13 +23,11 @@ block content
           if user.userrole === "stockmanager" || user.userrole === "admin"
             th Action
       tbody
-        each product in dbStock
-          tr
-            
+        each product, index in dbStock
+          //- If the index is 5 or greater, add 'extra-row d-none' to hide it by default
+          tr(class=index >= 5 ? 'extra-row d-none' : '')
             td #{product.factoryname}
             td #{product.suppliername}
-            
-           
             td #{product.suppliercontact}
             td #{product.productname}
             td #{product.total}
@@ -41,5 +43,24 @@ block content
                     button.btn.btn-sm.btn-outline-danger(type='submit')
                       i.fas.fa-trash-alt 
         if dbStock.length === 0
-            tr 
-            td.text-center(colspan='11') No stock has been recorded yet.
+          tr 
+            td.text-center(colspan='9') No supplier records have been found.
+
+  //- Reusable script tailored for the supplier page
+  script.
+    function toggleExtraRows() {
+      const extraRows = document.querySelectorAll('.extra-row');
+      const btn = document.getElementById('toggleRowsBtn');
+      
+      const isHidden = extraRows[0].classList.contains('d-none');
+      
+      extraRows.forEach(row => {
+        if (isHidden) {
+          row.classList.remove('d-none');
+          btn.innerText = 'Show Less';
+        } else {
+          row.classList.add('d-none');
+          btn.innerText = 'View All Suppliers';
+        }
+      });
+    }

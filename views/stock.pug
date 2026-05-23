@@ -5,20 +5,20 @@ block content
     h1 Stock Management
     p.stats
       | 17 products &middot; Total Stock value: #{stats.stockValue.toLocaleString()}UGX
-    //- .controls
-    .text-center
-    a.btn-add(href='/add_stock') + Add Stock
+    
+    //- Action Controls Section (Both buttons side-by-side at the top)
+    .d-flex.justify-content-between.align-items-center.mb-3
+      a.btn-add.m-0(href='/add_stock') + Add Stock
+      
+      //- Move the toggle button here, only rendering if there are more than 5 products
+      if dbStock.length > 5
+        button#toggleRowsBtn.btn.btn-outline-primary(type="button" onclick="toggleExtraRows()") View All Products
+
     table
       thead
         tr
           th Product Name
           th Product Image
-          //- th Category
-          //- th Unit 
-          
-          //- th Factory Name
-          //- th Factory Contact
-          //- th Supplier Name
           th Quantity
           th Unit Cost
           th Total
@@ -27,13 +27,12 @@ block content
           if user.userrole === "stockmanager" || user.userrole === "admin"
             th Action
       tbody
-        each product in dbStock
-          tr
+        each product, index in dbStock
+          //- If the index is 5 or greater, add the 'extra-row' class to hide it by default
+          tr(class=index >= 5 ? 'extra-row d-none' : '')
             td #{product.productname}
             td 
               img(src='/'+product.image alt='Product image' width='80px' height='80px')
-            //- td #{product.category}
-            //- td #{product.unit}
             td
               if product.quantity === 0
                 span.badge.bg-danger Out of Stock
@@ -42,15 +41,9 @@ block content
               else
                 span.text-success #{product.quantity}
            
-            //- td #{product.factoryname}
-            //- td #{product.suppliercontact}
-            //- td #{product.suppliername}
-            //- td #{product.quantity}
             td #{product.unitcost}
             td #{(product.quantity)*(product.unitcost)} 
             td #{product.sellingprice}
-            //- td #{sale.attendant ? sale.attendant.fullname:'unknown'}
-            //- td #{sale.attendant ? sale.attendant.firstname + '' + sale.attendant.lastname:'unknown' }
             td #{new Date(product.date).toLocaleString()}
             if user.userrole === "stockmanager" || user.userrole === "admin"
               td 
@@ -61,5 +54,25 @@ block content
                     button.btn.btn-sm.btn-outline-danger(type='submit')
                       i.fas.fa-trash-alt 
         if dbStock.length === 0
-            tr 
-            td.text-center(colspan='11') No stock has been recorded yet.
+          tr 
+            td.text-center(colspan='8') No stock has been recorded yet.
+
+  //- Tiny JavaScript snippet to handle the toggle safely without disrupting table styles
+  script.
+    function toggleExtraRows() {
+      const extraRows = document.querySelectorAll('.extra-row');
+      const btn = document.getElementById('toggleRowsBtn');
+      
+      // Check if the rows are currently hidden
+      const isHidden = extraRows[0].classList.contains('d-none');
+      
+      extraRows.forEach(row => {
+        if (isHidden) {
+          row.classList.remove('d-none');
+          btn.innerText = 'Show Less';
+        } else {
+          row.classList.add('d-none');
+          btn.innerText = 'View All Products';
+        }
+      });
+    }
