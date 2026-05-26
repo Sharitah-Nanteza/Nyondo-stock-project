@@ -1,31 +1,34 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  title Sales Dashboard
-  link(rel='stylesheet' href='/css/board.css')
-.sidebar
-  h2 NYONDO
-  p Sales Attendant
-  //- a(href='#') Dashboard
-  a(href='/sales-list') Sales
-  a(href='/stock') Stock
-  a.logout(href='/logout') Logout
-.main
-  .top
-    h1 Sales Dashboard
-    p Sales &amp; transactions
-  .cards
-    .card
-      h3 Total Sales
-      h2 #{stats.salesToday.toLocaleString()}UGX
-    .card
-      h3 Transactions
-      h2 12
-  .section
-    h3 Recent Sales
-    .item
-      span John Mukasa
-      span 0.95M UGX
-    .item
-      span Shop A
-      span 0.6M UGX
+//- doctype html
+//- head
+//-   meta(charset='UTF-8')
+//-   title Sales Dashboard
+//-   link(rel='stylesheet' href='/css/board.css')
+//- .sidebar
+//-   h2 NYONDO
+//-   p Sales Attendant
+//-   //- a(href='#') Dashboard
+//-   a(href='/sales-list') Sales
+//-   a(href='/stock') Stock
+//-   a.logout(href='/logout') Logout
+extends layout
+
+block content 
+    .main
+      .top
+        h1 Sales Dashboard
+        p Sales &amp; transactions
+      .cards
+        .card
+          h3 Total Sales
+          h2 #{stats.salesToday.toLocaleString()}UGX
+        .card
+          h3 Transactions
+          h2 12
+      .section
+        h3 Recent Sales
+        .item
+          span John Mukasa
+          span 0.95M UGX
+        .item
+          span Shop A
+          span 0.6M UGX

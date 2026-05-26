@@ -29,6 +29,7 @@ router.post("/addsale", isSalesAttendantOrAdmin, async (req, res) => {
       customercontact,
       customeraddress,
       customerdistance,
+      deliverymethod,
       productId,
       qty,
       unit,
@@ -92,18 +93,31 @@ router.post("/addsale", isSalesAttendantOrAdmin, async (req, res) => {
       });
     }
 
-    let transportCost = 0;
-    if (parsedDistance <= 10 && grandTotalItemsPrice >= 500000) {
+    // let transportCost = 0;
+    // if (parsedDistance <= 10 && grandTotalItemsPrice >= 500000) {
+    //   transportCost = 0;
+    // } else {
+    //   transportCost = 30000;
+    // }
+let transportCost = 0;
+
+    if (deliverymethod === 'pickup') {
       transportCost = 0;
     } else {
-      transportCost = 30000;
+      // It's a hardware delivery, execute pricing rules
+      if (parsedDistance <= 10 && grandTotalItemsPrice >= 500000) {
+        transportCost = 0;
+      } else {
+        transportCost = 30000;
+      }
     }
-    // 4. Save everything as a single unified transaction record
+   // 4. Save everything as a single unified transaction record
     const newSale = new Sale({
       customername,
       customercontact: phone,
       customeraddress,
       customerdistance: parsedDistance,
+      deliverymethod,
       transportCost,
       attendant: req.user._id,
       total: grandTotalItemsPrice,
@@ -155,19 +169,31 @@ router.get("/sale/edit/:id", async (req, res) => {
   }
 });
 
+
 router.post("/sale/edit/:id", async (req, res) => {
   try {
-    const { qty, buyingprice, sellingprice, customername, customercontact } =
-      req.body;
-    const total = parseInt(qty) * parseFloat(sellingprice);
+    const { qty, sellingprice, customername, customercontact } = req.body;
+    
+    // Calculate new total based on updated quantities
+    const total = parseInt(qty, 10) * parseFloat(sellingprice);
+    
+    // Guard: Ensure it starts with 256 even if the user types a standard local 07... number
+    // let formattedContact = customercontact.trim();
+    // if (formattedContact.startsWith("0")) {
+    //   formattedContact = "256" + formattedContact.substring(1);
+    // } else if (!formattedContact.startsWith("256")) {
+    //   formattedContact = "256" + formattedContact;
+    // }
+
     await Sale.findByIdAndUpdate(req.params.id, {
       total,
-      qty,
-      buyingprice,
-      sellingprice,
       customername,
-      customercontact,
+      // customercontact: formattedContact,
+      // Target the first item index inside the subdocument array
+      "items.0.qty": parseInt(qty, 10),
+      "items.0.sellingprice": parseFloat(sellingprice)
     });
+    
     res.redirect("/sales-list");
   } catch (error) {
     console.error(error.message);
@@ -176,14 +202,14 @@ router.post("/sale/edit/:id", async (req, res) => {
   }
 });
 // Delete route
-router.post("/sale/delete/:id", async (req, res) => {
-  try {
-    await Sale.findByIdAndDelete(req.params.id);
-    res.redirect("/sales-list");
-  } catch (error) {
-    console.error(error);
-  }
-});
+// router.post("/sale/delete/:id", async (req, res) => {
+//   try {
+//     await Sale.findByIdAndDelete(req.params.id);
+//     res.redirect("/sales-list");
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
 
 // View and print receipt
 router.get("/receipt/:id", async (req, res) => {
@@ -198,5 +224,7 @@ router.get("/receipt/:id", async (req, res) => {
     res.status(500).send("Server error generating receipt");
   }
 });
+
+
 
 module.exports = router;

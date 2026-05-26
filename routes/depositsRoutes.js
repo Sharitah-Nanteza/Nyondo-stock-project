@@ -27,7 +27,7 @@ router.get("/deposited", async (req, res) => {
   }
 });
 
-// 2. Submit New Multi-Item Deposit
+// 2. Submit New Multi-Item Deposit (WITH UPDATED DELIVERY METHOD CONTROL)
 router.post("/deposit", async (req, res) => {
   try {
     const {
@@ -37,12 +37,22 @@ router.post("/deposit", async (req, res) => {
       productname,        
       customeraddress,
       customerdistance,
+      deliverymethod,
       quantity,          
       amountDeposited,
     } = req.body;
 
     const phone = "+256" + phonenumber;
-    const parsedDistance = parseFloat(customerdistance) || 0;
+    
+    // Evaluate Distance and Transport Costs explicitly by checking deliverymethod
+    let parsedDistance = parseFloat(customerdistance) || 0;
+    let transportCost = 30000;
+
+    if (deliverymethod === 'pickup') {
+      // Customer's Transport: No transport fee charged, distance is zeroed
+      parsedDistance = 0;
+      transportCost = 0;
+    }
 
     // Normalize data inputs into arrays so processing loops function identically
     const productIds = Array.isArray(productname) ? productname : [productname];
@@ -79,7 +89,6 @@ router.post("/deposit", async (req, res) => {
       const rowPrice = parseFloat(productDetails.sellingprice);
       totalItemsValue += (orderQty * rowPrice);
 
-      // FIXED: Pushing exact property names matching your schema layout
       itemsToProcess.push({
         productname: productIds[i], 
         quantity: orderQty,         
@@ -87,8 +96,10 @@ router.post("/deposit", async (req, res) => {
       });
     }
 
-    // Transport calculation rules
-    let transportCost = (parsedDistance <= 10 && totalItemsValue >= 500000) ? 0 : 30000;
+    // Dynamic fallback check if delivery method is 'hardware'
+    if (deliverymethod === 'hardware') {
+      transportCost = (parsedDistance <= 10 && totalItemsValue >= 500000) ? 0 : 30000;
+    }
 
     const overallCost = totalItemsValue + transportCost;
     const upfrontPayment = parseFloat(amountDeposited) || 0;
@@ -101,6 +112,7 @@ router.post("/deposit", async (req, res) => {
       customeraddress,
       customerdistance: parsedDistance,
       amountDeposited: upfrontPayment,
+      deliverymethod,
       transportCost,
       total: overallCost,
       outstandingBalance: dynamicBalance,
@@ -109,7 +121,6 @@ router.post("/deposit", async (req, res) => {
 
     await newDeposit.save();
     
-    // FIXED: Render the populated customer object so the items and names show up instantly on the receipt view
     const populatedCustomer = await Deposit.findById(newDeposit._id).populate("depositedItems.productname");
     res.render("a", { customer: populatedCustomer });
 
@@ -120,16 +131,15 @@ router.post("/deposit", async (req, res) => {
   }
 });
 
-// 3. Customer Dashboard View
+// 3. Customer Dashboard View (FIXED SORT CRITERIA)
 router.get("/deposits", async (req, res) => {
   try {
-    // 1. Get ONLY the latest 3 records to display as view cards
+    // FIXED: Sorted by '_id: -1' (or 'date: -1') since 'createdAt' doesn't exist in your schema
     const limitedRecords = await Deposit.find()
       .populate("depositedItems.productname")
-      .sort({ createdAt: -1 })
+      .sort({ _id: -1 }) 
       .limit(3);
 
-    // 2. Pass those 3 limited records down to your Pug template loop variable
     res.render("deposit", { customers: limitedRecords });
   } catch (error) {
     console.error("Failed to load dashboard:", error);
@@ -167,7 +177,6 @@ router.post("/records/:id", async (req, res) => {
     });
     await customer.save();
     
-    // FIXED: Changed population target field to productname
     const customerData = await Deposit.findById(req.params.id).populate("depositedItems.productname");
     res.render("a", { customer: customerData });
   } catch (error) {

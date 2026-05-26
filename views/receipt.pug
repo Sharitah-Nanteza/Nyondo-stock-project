@@ -27,7 +27,19 @@ head
       span.info-label Customer:
       span.info-value #{sale.customername}
     
-    //- NEW: Itemized Breakdown Table replacing the old single rows
+    //- FIXED: Explicit checks for delivery method to prevent wrong default labels
+    .info-row
+      span.info-label Delivery Method:
+      span.info-value 
+        if sale.deliverymethod === 'pickup'
+          | Customer's Transport
+        else if sale.deliverymethod === 'hardware'
+          | Hardware Delivery (#{sale.customerdistance} Km)
+        else
+          //- Safe fallback for older saved transactions that don't have the field yet
+          | Not Specified / Walk-in Customer
+    
+    //- Itemized Breakdown Table replacing the old single rows
     table.receipt-table
       thead
         tr

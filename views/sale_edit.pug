@@ -4,25 +4,48 @@ head
   meta(name='viewport' content='width=device-width, initial-scale=1')
   title New sale form
   link(rel='stylesheet' href='/css/stock_reg_form.css')
+  style.
+    /* Grouping the buttons together nicely */
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    /* Style for the cancel link to make it look like a sleek button */
+    .btn-cancel {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: #64748b; /* A neutral gray color */
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 0.5rem;
+      text-align: center;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+    .btn-cancel:hover {
+      background-color: #475569;
+    }
 .form-container
   h2 Sales edit form
   form(action=`/sale/edit/${sale._id}` method='post')
     .row
-      //- .field
-      //-   label(for='product') Product Name
-      //-   input#product(type='text' name='product' value=sale.product.productname)
       .field
         label(for='qty') Quantity
-        input#qty(type='number' name='qty' min='1' value=sale.qty)
+        input#qty(type='number' name='qty' min='1' value=(sale.items && sale.items[0] ? sale.items[0].qty : ''))
       .field
         label(for='sellingprice') Selling price(Unit Cost) (UGX)
-        input#sellingprice(type='number' name='sellingprice' value=sale.sellingprice)
+        input#sellingprice(type='number' name='sellingprice' value=(sale.items && sale.items[0] ? sale.items[0].sellingprice : ''))
     .row
       .field
         label(for='customername') Customer Name
         input#customername(type='text' name="customername" value=sale.customername required placeholder='e.g Paul Mukasa')
       .field
         label(for='customercontact') Customer contact
-        input#customercontact(type='number' name='customercontact' value=sale.customercontact placeholder='07xxxx' required)
-    button.btn-save(type='submit') Confirm &amp; edit  sale
-
+        input#customercontact(type='text' name='customercontact' value=sale.customercontact placeholder='2567xxxxxx' required)
+    
+    //- Wrapped both buttons inside a button-group div so they sit side-by-side
+    .button-group
+      button.btn-save(type='submit') Confirm &amp; edit sale
+      a.btn-cancel(href='/sales-list') Cancel

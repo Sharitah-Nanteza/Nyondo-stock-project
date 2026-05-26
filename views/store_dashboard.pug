@@ -1,47 +1,51 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  title Store Dashboard
-  link(rel='stylesheet' href='/css/board.css')
-.sidebar
-  h2 NYONDO
-  p Store Manager
-  //- a(href='#') Dashboard
-  a(href='/stock') Stock
-  a.logout(href='/logout') Logout
-.main
-  .top
-    h1 Store Dashboard
-    p Inventory control
-  .cards
-    .card
-      h3 Total Stock
-      h2 #{stats.stockValue.toLocaleString()}UGX
-    .card
-      h3 Items
-      h2 #{stats.totalProducts}
-    .card
-      h3 Low Stock
-      h2 #{stats.lowStockCount}
-    .card
-      h3 Out of Stock
-      h2 #{stats.outOfStockCount}
-  .section
-    h3 Stock Alerts
-    each item in dbStock
-      if item.quantity === 0
-        .item
-          span #{item.productname}
-          span(style="color: red; font-weight: bold;") Out of Stock
-      else if item.quantity <= 20
-        .item
-          span #{item.productname}
-          span(style="color: orange;") Low Stock (#{item.quantity} left)
-    else
-      p No stock alerts at the moment!
-    //- .item
-    //-   span Wire Mesh
-    //-   span Low
-    //- .item
-    //-   span Nails
-    //-   span Critical
+//- doctype html
+//- head
+//-   meta(charset='UTF-8')
+//-   title Store Dashboard
+//-   link(rel='stylesheet' href='/css/board.css')
+//- .sidebar
+//-   h2 NYONDO
+//-   p Store Manager
+//-   //- a(href='#') Dashboard
+//-   a(href='/stock') Stock
+//-   a.logout(href='/logout') Logout
+extends layout
+
+block content 
+    .main
+      .top
+        h1(style="color:black;") Store Dashboard
+        p Inventory control
+      .cards
+        .card
+          h3 Total Stock
+          h4(style="color:black; font-weight: bold;") #{stats.stockValue.toLocaleString()}UGX
+        
+        .card
+          h3 Low Stock
+          h2(style="color: #d9534f; font-weight: bold;") #{stats.lowStockCount}
+        .card
+          h3 Out of Stock
+          h2(style="color: #d9534f; font-weight: bold;") #{stats.outOfStockCount}
+        .card
+          h3 Items
+          h4(style="color:black; font-weight: bold;") #{stats.totalProducts}
+      .section
+        h4 Stock Alerts
+        each item in dbStock
+          if item.quantity === 0
+            .item
+              span #{item.productname}
+              span(style="color: red; font-weight: bold;") Out of Stock
+          else if item.quantity <= 20
+            .item
+              span #{item.productname}
+              span(style="color: red; font-weight: bold;") Low Stock (#{item.quantity} left)
+        else
+          p No stock alerts at the moment!
+        //- .item
+        //-   span Wire Mesh
+        //-   span Low
+        //- .item
+        //-   span Nails
+        //-   span Critical

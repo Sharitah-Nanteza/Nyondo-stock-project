@@ -50,9 +50,9 @@ block content
                 .d-flex.gap-2 
                   a.btn.btn-sm.btn-outline-warning(href=`/stock/edit/${product._id}`)
                     i.fas.fa-edit
-                  form(action=`/delete/${product._id}` method="post" onsubmit='return confirm("Are you sure you want to delete this item?");')
-                    button.btn.btn-sm.btn-outline-danger(type='submit')
-                      i.fas.fa-trash-alt 
+                  //- form(action=`/delete/${product._id}` method="post" onsubmit='return confirm("Are you sure you want to delete this item?");')
+                  //-   button.btn.btn-sm.btn-outline-danger(type='submit')
+                  //-     i.fas.fa-trash-alt 
         if dbStock.length === 0
           tr 
             td.text-center(colspan='8') No stock has been recorded yet.

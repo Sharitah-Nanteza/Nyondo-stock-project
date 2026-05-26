@@ -1,9 +1,55 @@
+//- doctype html
+//- head
+//-   meta(charset='UTF-8')
+//-   meta(name='viewport' content='width=device-width, initial-scale=1')
+//-   title New stock form
+//-   link(rel='stylesheet' href='/css/stock_reg_form.css')
+//- .form-container
+//-   h2 Stock edit form
+//-   form(action=`/stock/edit/${stock._id}` method='post')
+//-     .row
+//-       .field
+//-         label(for='quantity') Quantity
+//-         input#qty(type='number' name='quantity' min='1' value=stock.quantity)
+//-       .field
+//-         label(for='unitcost') Unit Cost
+//-         input#unitcost(type='number' name='unitcost' value=stock.unitcost )  
+//-       .field
+//-         label(for='sellingprice') Selling price (UGX)
+//-         input#sellingprice(type='number' name='sellingprice' value=stock.sellingprice)
+
+
+//-     button.btn-save(type='submit') Confirm &amp; edit  stock
+
 doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1')
   title New stock form
   link(rel='stylesheet' href='/css/stock_reg_form.css')
+  style.
+    /* Grouping the buttons together nicely */
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    /* Style for the cancel link to make it look like a sleek button */
+    .btn-cancel {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: #64748b; /* Neutral gray */
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 0.5rem;
+      text-align: center;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+    .btn-cancel:hover {
+      background-color: #475569;
+    }
 .form-container
   h2 Stock edit form
   form(action=`/stock/edit/${stock._id}` method='post')
@@ -18,6 +64,7 @@ head
         label(for='sellingprice') Selling price (UGX)
         input#sellingprice(type='number' name='sellingprice' value=stock.sellingprice)
 
-
-    button.btn-save(type='submit') Confirm &amp; edit  stock
-
+    //- Button group layout
+    .button-group
+      button.btn-save(type='submit') Confirm &amp; edit stock
+      a.btn-cancel(href='/stock') Cancel

@@ -1,3 +1,94 @@
+//- doctype html
+//- head
+//-   meta(charset='UTF-8')
+//-   meta(name='viewport' content='width=device-width, initial-scale=1')
+//-   title stock_registration
+//-   link(rel='stylesheet' href='/css/stock_reg_form.css')
+//- .form-container
+//-   h2 Stock registration form
+//-   form(action='/add_stock' method='post' enctype="multipart/form-data")
+//-     .row
+//-       .field
+//-         label(for='productname') Product Name
+//-         //- input#name(type='text' name='productname' placeholder='e.g., Cement CEM IIN' required='')
+//-         select(name='productname')
+//-           option(value='' disabled selected) Select product
+//-           option(value='Cement CEM IIN') Cement CEM IIN
+//-           option(value='Cement CEM IIIN') Cement CEM IIIN
+//-           option(value='Iron Bars 10mm') Iron Bars 10mm
+//-           option(value='Iron Bars 12mm') Iron Bars 12mm
+//-           option(value='Iron Bars 16mm') Iron Bars 16mm
+//-           option(value='Nails 1 inch (5kg)') Nails 1 inch (5kg)
+//-           option(value='Nails 3 inch (5kg)') Nails 3 inch (5kg)
+//-           option(value='Nails 4 inch (5kg)') Nails 4 inch (5kg)
+//-           option(value='Nails 5 inch (5kg)') Nails 5 inch (5kg)
+//-           option(value='Roofing Nails (5kg)') Roofing Nails (5kg)
+//-           option(value='Wheelbarrows') Wheelbarrows
+//-           option(value='Wire Mesh') Wire Mesh
+//-           option(value='Barbed Wire High Tensile') Barbed Wire High Tensile
+//-           option(value='Barbed Wire Low Tensile') Barbed Wire Low Tensile
+//-           option(value='Iron Sheets Gauge 28 (Red)') Iron Sheets Gauge 28 (Red)
+//-           option(value='Iron Sheets Gauge 28 (Green)') Iron Sheets Gauge 28 (Green)
+//-           option(value='Iron Sheets Gauge 30 (Blue)') Iron Sheets Gauge 30 (Blue)
+//-       .field
+//-         label(for='image') Item image
+//-         input#cost(type='file' name="image")
+//-     .row
+//-       .field
+//-         label Unit
+//-         select(name='unit')
+//-           option(value='' disabled selected) Select unit
+//-           option(value='bags') Bags
+//-           option(value='pieces') Pieces
+//-           option(value='kg') Kg
+//-           option(value='packs') Packs
+//-           option(value='rolls') Rolls 
+//-           option(value='sheets') Sheets
+//-       .field
+//-           label Category
+//-           select(name='category')
+//-             option(value='' disabled selected) Select category
+//-             option(value='cement') Cement
+//-             option(value='iron_bars') Iron Bars
+//-             option(value='nails') Nails
+//-             option(value='wheelbarrows') Wheelbarrows
+//-             option(value='wire_mesh') Wire mesh
+//-             option(value='barbed_wire') Barbed wire
+//-             option(value='iron_sheets') Iron Sheets
+//-     .field.full-width
+//-         label(for='quantity') Quantity
+//-         input#quantity(type='number' name='quantity' )
+//-     .field.full-width
+//-         label(for='unitcost') Unit Cost (UGX)
+//-         input#unitcost(type='number' name='unitcost')
+//-     .field.full-width
+//-         label(for='sellingprice') Selling price (UGX)
+//-         input#sellingprice(type='number'  name="sellingprice")
+//-     .row
+//-       .field
+//-         label(for='factoryname') Factory Name
+//-         input#factoryname(type='text' name='factoryname' placeholder='e.g., Hima Cement')
+      
+//-       .field
+//-         label(for='suppliercontact') Factory Contact
+//-         input#suppliercontact(type='text' name='suppliercontact' pattern='[7][0-9]{8}' minlength='9' maxlength='9'  title='Enter a valid Ugandan number' placeholder='e.g.,7XXXXXXXX')
+//-     .row
+//-       .field
+//-         label(for='suppliername') Supplier Name
+//-         input#suppliername(type='text' name='suppliername' placeholder='e.g., Richard')
+//-       .field
+//-         label Payment Type
+//-         select(name='paymentstatus')
+//-           option(value='' disabled selected) Select payment Type
+//-           option(value='paid') Paid
+//-           option(value='credit') Credit
+//-     .button-group
+//-         button.btn-save(type='submit') Confirm &amp; Record stock
+//-         a.btn.btn-secondary(href='/stock') Cancel
+
+//-     p.note &#x1F4E6; Stock will be added to inventory upon registration
+
+
 doctype html
 head
   meta(charset='UTF-8')
@@ -10,8 +101,8 @@ head
     .row
       .field
         label(for='productname') Product Name
-        //- input#name(type='text' name='productname' placeholder='e.g., Cement CEM IIN' required='')
-        select(name='productname')
+        //- Added required directly to the select element
+        select(name='productname' required)
           option(value='' disabled selected) Select product
           option(value='Cement CEM IIN') Cement CEM IIN
           option(value='Cement CEM IIIN') Cement CEM IIIN
@@ -32,11 +123,12 @@ head
           option(value='Iron Sheets Gauge 30 (Blue)') Iron Sheets Gauge 30 (Blue)
       .field
         label(for='image') Item image
-        input#cost(type='file' name="image")
+        //- Added required so an item must have an image
+        input#cost(type='file' name="image" required)
     .row
       .field
         label Unit
-        select(name='unit')
+        select(name='unit' required)
           option(value='' disabled selected) Select unit
           option(value='bags') Bags
           option(value='pieces') Pieces
@@ -46,7 +138,7 @@ head
           option(value='sheets') Sheets
       .field
           label Category
-          select(name='category')
+          select(name='category' required)
             option(value='' disabled selected) Select category
             option(value='cement') Cement
             option(value='iron_bars') Iron Bars
@@ -57,28 +149,31 @@ head
             option(value='iron_sheets') Iron Sheets
     .field.full-width
         label(for='quantity') Quantity
-        input#quantity(type='number' name='quantity' )
+        //- Added min='1' and required to prevent zero or negative stock entry
+        input#quantity(type='number' name='quantity' min='1' placeholder='e.g., 50' required)
     .field.full-width
         label(for='unitcost') Unit Cost (UGX)
-        input#unitcost(type='number' name='unitcost')
+        //- Added min='0' and required
+        input#unitcost(type='number' name='unitcost' min='0' placeholder='e.g., 28000' required)
     .field.full-width
         label(for='sellingprice') Selling price (UGX)
-        input#sellingprice(type='number'  name="sellingprice")
+        //- Added min='0' and required
+        input#sellingprice(type='number' name="sellingprice" min='0' placeholder='e.g., 32000' required)
     .row
       .field
         label(for='factoryname') Factory Name
-        input#factoryname(type='text' name='factoryname' placeholder='e.g., Hima Cement')
+        input#factoryname(type='text' name='factoryname' placeholder='e.g., Hima Cement' required)
       
       .field
         label(for='suppliercontact') Factory Contact
-        input#suppliercontact(type='text' name='suppliercontact' pattern='[7][0-9]{8}' minlength='9' maxlength='9'  title='Enter a valid Ugandan number' placeholder='e.g.,7XXXXXXXX')
+        input#suppliercontact(type='text' name='suppliercontact' pattern='[7][0-9]{8}' minlength='9' maxlength='9' title='Enter a valid Ugandan number starting with 7' placeholder='e.g.,7XXXXXXXX' required)
     .row
       .field
         label(for='suppliername') Supplier Name
-        input#suppliername(type='text' name='suppliername' placeholder='e.g., Richard')
+        input#suppliername(type='text' name='suppliername' placeholder='e.g., Richard' required)
       .field
         label Payment Type
-        select(name='paymentstatus')
+        select(name='paymentstatus' required)
           option(value='' disabled selected) Select payment Type
           option(value='paid') Paid
           option(value='credit') Credit

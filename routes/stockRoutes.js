@@ -71,7 +71,7 @@ router.post("/add_stock", upload.single("image"), async (req, res) => {
     res.render("stock_reg_form", { error: error.message });
   }
 });
-//Get stock from the Db
+//Getting stock from the Db
 router.get("/stock", async (req, res) => {
   try {
     //Calculating statistics (aggregation pipeline)
@@ -123,7 +123,7 @@ router.get("/stock", async (req, res) => {
     res.status(400).send("Unable to pick product from the db");
   }
 });
-
+//Supplier information
 router.get("/supplier", async (req, res) => {
   try {
     let stats = {
@@ -142,14 +142,14 @@ router.get("/supplier", async (req, res) => {
       // .populate("productname category")
       .sort({ date: -1 });
 
-    // 2. Calculate the total dues from the dbStock array we just fetched
+    //Calculate the total dues from the dbStock array we just fetched
     stats.totalSupplierDues = dbStock
       .filter(product => product.paymentstatus && product.paymentstatus.toLowerCase() === 'credit')
       .reduce((sum, product) => sum + (Number(product.total) || 0), 0);
 
     console.log("dbStock fetched. Total credit dues calculated:", stats.totalSupplierDues);
     
-    // 3. Send it off to the Pug view! Note that stats now includes totalSupplierDues
+    // Send it off to the Pug view! (stats now includes totalSupplierDues)
     res.render("supplier", { dbStock, stats });
   } catch (error) {
     console.error(error.message);
@@ -185,17 +185,16 @@ router.post("/stock/edit/:id", async (req, res) => {
   }
 });
 // Delete route
-router.post("/delete/:id", async (req, res) => {
-  try {
-    await Stock.findByIdAndDelete(req.params.id);
-    res.redirect("/stock");
-  } catch (error) {
-    console.error(error);
-  }
-});
+// router.post("/delete/:id", async (req, res) => {
+//   try {
+//     await Stock.findByIdAndDelete(req.params.id);
+//     res.redirect("/stock");
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
 
-// Supplier
-
+// Supplier edit
 router.get("/supplier/edit/:id", async (req, res) => {
   try {
     const stock = await Stock.findById(req.params.id);
@@ -208,15 +207,26 @@ router.get("/supplier/edit/:id", async (req, res) => {
 });
 router.post("/supplier/edit/:id", async (req, res) => {
   try {
-    const { paymentstatus } = req.body;
+    const { factoryname, suppliername, suppliercontact, paymentstatus } = req.body;
+    
+    // Formatting phone string safely back into database layout
+    let phone = suppliercontact.trim();
+    if (!phone.startsWith("+256")) {
+      phone = "+256" + phone;
+    }
+
     await Stock.findByIdAndUpdate(req.params.id, {
+      factoryname,
+      suppliername,
+      suppliercontact: phone,
       paymentstatus,
     });
+    
     res.redirect("/supplier");
   } catch (error) {
     console.error(error.message);
     const stock = await Stock.findById(req.params.id);
-    res.render("supplier_edit", { stock });
+    res.render("supplier_edit", { stock, error: error.message });
   }
 });
 

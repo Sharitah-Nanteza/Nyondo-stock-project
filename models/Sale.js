@@ -44,6 +44,7 @@ const saleSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  deliverymethod: { type: String, enum: ['hardware', 'pickup'], required: true },
   transportCost: {
     type: Number,
   },

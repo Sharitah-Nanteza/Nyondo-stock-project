@@ -5,7 +5,6 @@ block content
     .header
       div
         h1 Sales Recording
-        p 0 sales today &middot; Revenue: 0.00M UGX
       .text-center
         a.btn-new(href='/addsale') + New Sale
     
@@ -14,14 +13,14 @@ block content
       .stat-card
         small Total Sales (All Time)
         h2 #{stats.salesToday.toLocaleString()} UGX                    
-      .stat-card
-        small Sales Today
-        h2 0
-        p(style='color:#2563eb') 0.00M UGX revenue
-      .stat-card
-        small Average Sale Value
-        h2 1.20M
-        p Per transaction
+      //- .stat-card
+      //-   small Sales Today
+      //-   h2 0
+      //-   p(style='color:#2563eb') 0.00M UGX revenue
+      //- .stat-card
+      //-   small Average Sale Value
+      //-   h2 1.20M
+      //-   p Per transaction
     
     //- Action Controls Section (Aligns the toggle button cleanly to the right side above the table)
     .d-flex.justify-content-between.align-items-center.mt-4.mb-2
@@ -32,6 +31,7 @@ block content
     table.sales-table
       thead
         tr
+          th Date 
           th Product Name 
           th Quantity
           th Selling Price
@@ -39,7 +39,7 @@ block content
           th Customer Name
           th Customer Contact 
           th Attendant 
-          th Date 
+         
           if user.userrole === "salesattendant" || user.userrole === "admin"
             th Action 
       tbody
@@ -47,6 +47,7 @@ block content
         each sale, index in dbSales
           //- If the invoice index is 5 or greater, hide the whole row by default
           tr(class=index >= 5 ? 'extra-row d-none' : '')
+            td #{new Date(sale.date).toLocaleString()}
             //- 1. Product Name Column
             td
               each item in sale.items
@@ -69,7 +70,7 @@ block content
             td #{sale.customername}
             td #{sale.customercontact}
             td #{sale.attendant ? sale.attendant.fullname : 'unknown'}
-            td #{new Date(sale.date).toLocaleString()}
+            
             
             //- 6. Actions (Only triggers once per complete sale document)
             if user.userrole === "salesattendant" || user.userrole === "admin"
@@ -77,9 +78,9 @@ block content
                 .d-flex.gap-2  
                   a.btn.btn-sm.btn-outline-warning(href=`/sale/edit/${sale._id}`)
                     i.fas.fa-edit
-                  form(action=`/sale/delete/${sale._id}` method="post" onsubmit='return confirm("Are you sure you want to delete this entire sale?");')
-                    button.btn.btn-sm.btn-outline-danger(type='submit')
-                      i.fas.fa-trash-alt 
+                  //- form(action=`/sale/delete/${sale._id}` method="post" onsubmit='return confirm("Are you sure you want to delete this entire sale?");')
+                  //-   button.btn.btn-sm.btn-outline-danger(type='submit')
+                  //-     i.fas.fa-trash-alt 
 
         if dbSales.length === 0
           tr 

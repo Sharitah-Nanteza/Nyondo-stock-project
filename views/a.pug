@@ -1,202 +1,3 @@
-//- doctype html
-//- html
-//-   head
-//-     title Nyondo General Hardware - Receipt
-//-     meta(charset="utf-8")
-//-     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-//-     style.
-//-       body {
-//-         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-//-         background-color: #f4f6f9;
-//-         margin: 0;
-//-         padding: 40px 20px;
-//-         color: #333;
-//-       }
-//-       .receipt-card {
-//-         max-width: 600px;
-//-         margin: 0 auto;
-//-         background: #ffffff;
-//-         border-radius: 8px;
-//-         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-//-         border-top: 8px solid #2563eb; /* Nyondo Blue accent */
-//-         overflow: hidden;
-//-       }
-//-       .receipt-header {
-//-         background-color: #2563eb;
-//-         color: #ffffff;
-//-         padding: 30px;
-//-         text-align: center;
-//-       }
-//-       .receipt-header h1 {
-//-         margin: 0;
-//-         font-size: 24px;
-//-         text-transform: uppercase;
-//-         letter-spacing: 1px;
-//-       }
-//-       .receipt-header p {
-//-         margin: 5px 0 0 0;
-//-         opacity: 0.9;
-//-         font-size: 14px;
-//-       }
-//-       .receipt-body {
-//-         padding: 30px;
-//-       }
-//-       .section-title {
-//-         color: #2563eb;
-//-         font-size: 16px;
-//-         border-bottom: 2px solid #f0f4f8;
-//-         padding-bottom: 8px;
-//-         margin-top: 0;
-//-         margin-bottom: 15px;
-//-       }
-//-       .info-grid {
-//-         display: grid;
-//-         grid-template-columns: 1fr 1fr;
-//-         gap: 15px;
-//-         margin-bottom: 25px;
-//-       }
-//-       .info-group label {
-//-         display: block;
-//-         font-size: 12px;
-//-         color: #777;
-//-         text-transform: uppercase;
-//-         margin-bottom: 3px;
-//-       }
-//-       .info-group value {
-//-         display: block;
-//-         font-weight: 600;
-//-         color: #222;
-//-       }
-//-       .receipt-table {
-//-         width: 100%;
-//-         border-collapse: collapse;
-//-         margin-bottom: 25px;
-//-       }
-//-       .receipt-table th {
-//-         background-color: #f0f4f8;
-//-         color: #2563eb;
-//-         text-align: left;
-//-         padding: 10px;
-//-         font-size: 14px;
-//-       }
-//-       .receipt-table td {
-//-         padding: 12px 10px;
-//-         border-bottom: 1px solid #f0f4f8;
-//-         font-size: 14px;
-//-       }
-//-       .financial-summary {
-//-         background-color: #f8f9fa;
-//-         padding: 20px;
-//-         border-radius: 6px;
-//-         margin-top: 20px;
-//-       }
-//-       .financial-row {
-//-         display: flex;
-//-         justify-content: space-between;
-//-         margin-bottom: 10px;
-//-         font-size: 15px;
-//-       }
-//-       .financial-row:last-child {
-//-         margin-bottom: 0;
-//-         padding-top: 10px;
-//-         border-top: 1px dashed #ccc;
-//-       }
-//-       .highlight-balance {
-//-         font-size: 18px;
-//-         font-weight: bold;
-//-         color: #d9534f; /* Muted red for balance due, or change to #2563eb if keeping strict blue/white */
-//-       }
-//-       .btn-container {
-//-         text-align: center;
-//-         margin-top: 30px;
-//-       }
-//-       .btn-back {
-//-         background-color: #2563eb;
-//-         color: white;
-//-         padding: 12px 24px;
-//-         text-decoration: none;
-//-         border-radius: 4px;
-//-         font-weight: 600;
-//-         display: inline-block;
-//-         transition: background 0.2s;
-//-       }
-//-       .btn-back:hover {
-//-         background-color: #2563eb;
-//-       }
-//-       @media print {
-//-         body { background-color: #fff; padding: 0; }
-//-         .receipt-card { box-shadow: none; border: none; max-width: 100%; }
-//-         .btn-container { display: none; }
-//-       }
-
-//-   body
-//-     if customer
-//-       .receipt-card
-//-         // HEADER
-//-         .receipt-header
-//-           h1 Nyondo General Hardware
-//-           p Official Payment Receipt
-//-           p Date: #{new Date().toLocaleDateString('en-GB')}
-
-//-         .receipt-body
-//-           // CUSTOMER & ITEM INFO
-//-           h3.section-title Customer & Order Details
-//-           .info-grid
-//-             .info-group
-//-               label Customer Name
-//-               value #{customer.fullName}
-//-             .info-group
-//-               label Phone Number
-//-               value #{customer.phonenumber}
-//-             .info-group
-//-               label Product Ordered
-//-               value #{customer.productname ? customer.productname.productname : 'General Order'}
-//-             .info-group
-//-               label Quantity
-//-               value #{customer.quantity ? customer.quantity : 'N/A'}
-
-//-           // INSTALLMENT LOG
-//-           h3.section-title Payment Installation Log
-//-           if customer.paymentHistory && customer.paymentHistory.length
-//-             table.receipt-table
-//-               thead
-//-                 tr
-//-                   th Date
-//-                   th Payment Method
-//-                   th Amount Paid
-//-               tbody
-//-                 each payment in customer.paymentHistory
-//-                   tr
-//-                     td #{new Date(payment.dateRecorded).toLocaleDateString('en-GB')}
-//-                     td(style="text-transform: capitalize;") #{payment.paymentMethod}
-//-                     td UGX #{payment.amount.toLocaleString()}
-//-           else
-//-             p(style="color: #777; font-style: italic;") No installment transactions recorded yet.
-
-//-           // FINANCIAL SUMMARY
-//-           .financial-summary
-//-             .financial-row
-//-               span Total Order Cost (inc. Transport):
-//-               strong UGX #{customer.total.toLocaleString()}
-//-             .financial-row
-//-               span Total Amount Accumulated:
-//-               strong(style="color: #28a745;") UGX #{customer.amountDeposited.toLocaleString()}
-//-             .financial-row
-//-               span.highlight-balance Outstanding Balance:
-//-               span.highlight-balance UGX #{customer.outstandingBalance.toLocaleString()}
-
-//-       // ACTION BUTTONS
-//-       .btn-container
-//-         a.btn-back(href="/deposits") Return to Dashboard
-//-         |  
-//-         button.btn-back(onclick="window.print()", style="background-color: #6c757d; margin-left: 10px; cursor: pointer; border: none; font-family: inherit;") Print Receipt
-
-//-     else
-//-       .receipt-card(style="padding: 30px; text-align: center;")
-//-         h2 Error Loading Receipt
-//-         p No valid customer tracking parameters were supplied to this view.
-//-         a.btn-back(href="/deposits") Go Back
-
 doctype html
 html
   head
@@ -209,7 +10,7 @@ html
         background-color: #f4f6f9;
         margin: 0;
         padding: 40px 20px;
-        color: #333;
+        color:black;
       }
       .receipt-card {
         max-width: 600px;
@@ -217,12 +18,12 @@ html
         background: #ffffff;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        border-top: 8px solid #2563eb; /* Nyondo Blue accent */
+        border-top: 8px solid black; /* Nyondo Blue accent */
         overflow: hidden;
       }
       .receipt-header {
-        background-color: #2563eb;
-        color: #ffffff;
+        background-color: white;
+        color: black;
         padding: 30px;
         text-align: center;
       }
@@ -241,7 +42,7 @@ html
         padding: 30px;
       }
       .section-title {
-        color: #2563eb;
+        color: black;
         font-size: 16px;
         border-bottom: 2px solid #f0f4f8;
         padding-bottom: 8px;
@@ -276,7 +77,7 @@ html
       }
       .receipt-table th {
         background-color: #f0f4f8;
-        color: #2563eb;
+        color: black;
         text-align: left;
         padding: 10px;
         font-size: 14px;
@@ -355,9 +156,17 @@ html
             .info-group
               label Address
               value #{customer.customeraddress || 'N/A'}
+            
+            //- UPDATED: Handles delivery method checks safely
             .info-group
-              label Delivery Distance
-              value #{customer.customerdistance} Km
+              label Delivery Method
+              value
+                if customer.deliverymethod === 'pickup'
+                  | Customer's Transport
+                else if customer.deliverymethod === 'hardware'
+                  | Hardware Delivery (#{customer.customerdistance || 0} Km)
+                else
+                  | Not Specified / Walk-in
 
           // ITEMISED BREAKDOWN TABLE
           h3.section-title Products in Deposit Scheme
@@ -399,7 +208,7 @@ html
           // FINANCIAL SUMMARY
           .financial-summary
             .financial-row
-              span Total Scheme Cost (inc. Transport):
+              span Total Scheme Cost:
               strong UGX #{customer.total.toLocaleString()}
             .financial-row
               span Total Amount Accumulated:

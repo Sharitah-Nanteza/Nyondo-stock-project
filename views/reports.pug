@@ -1,0 +1,245 @@
+extends layout
+
+block content 
+
+  //- Main Application Content Frame Canvas
+  .main(style="padding: 30px;")
+    
+    .top.no-print.d-flex.justify-content-between.align-items-center.mb-4
+      div
+        h1 Business Summary Reports
+
+      
+      //- Monthly Search Form Parameters Wrapper Block
+      .d-flex.align-items-center.gap-3
+        form.d-flex.align-items-center.gap-2(method="GET" action="/reports")
+          label.fw-bold.text-secondary.m-0(for="monthPicker" style="font-size:13px;") Report Month:
+          input#monthPicker.form-control.form-control-sm(type="month" name="month" value=currentFilterMonth onchange="this.form.submit()" style="width:170px; cursor:pointer; font-weight:600;")
+        
+        button.btn(onclick="window.print()" style="background-color: #2563eb; color: white; font-weight: bold; padding: 10px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.08);")
+          | 📄 Print Master Report to PDF
+
+    //- On-Screen Dynamic Tab Pill Controls
+    ul.nav.nav-pills.mb-4.no-print(style="background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); gap: 10px;")
+      li.nav-item
+        button#tabBtn-sales.nav-link.active(onclick="switchReportTab('sales')" style="font-weight: 600; padding: 10px 20px;") 📈 Sales Summary
+      li.nav-item
+        button#tabBtn-stock.nav-link(onclick="switchReportTab('stock')" style="font-weight: 600; padding: 10px 20px;") 📦 Available Stock
+      li.nav-item
+        button#tabBtn-supplier.nav-link(onclick="switchReportTab('supplier')" style="font-weight: 600; padding: 10px 20px;") 🤝 Supplier Details
+      li.nav-item
+        button#tabBtn-deposit.nav-link(onclick="switchReportTab('deposit')" style="font-weight: 600; padding: 10px 20px;") 💳 Customer Deposits
+
+    //- ================= PRINT DISPATCH ENGINE WRAPPER =================
+    #printableMasterRegistry
+      
+      //- Corporate Letterhead Badge (Only shows up at top of printed PDF pages)
+      .print-header-brand(style="display: none; text-align: center; border-bottom: 3px double #2c3e50; padding-bottom: 12px; margin-bottom: 35px;")
+        h1(style="margin: 0; color: #2c3e50; font-size: 28px; font-weight: 800;") NYONDO GENERAL HARDWARE
+        p(style="margin: 5px 0 0 0; color: #7f8c8d; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;") Management System Master Audit Summary Log
+        p(style="margin: 2px 0 0 0; color: #e11d48; font-size: 12px; font-weight: bold;") Statement Target Window: #{currentFilterMonth}
+
+      //- 1. SALES REGISTRY PANEL
+      #tabContent-sales.report-tab-panel.card.mb-4(style="border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);")
+        .card-header(style="background: #fff; border-bottom: 2px solid #2563eb; padding: 15px;")
+          h3.card-title.m-0(style="color: #2563eb; font-size: 1.15rem; font-weight: 700;") 📈 Sales Summary
+        .card-body.p-0
+          table.table.table-hover.m-0(style="font-size: 13px; vertical-align: middle;")
+            thead.table-light
+              tr
+                th Date
+                th Product Name
+                th Qty
+                th Selling Price
+                th Total amount
+                th Customer Details
+                th Attendant
+            tbody
+              if dbSales && dbSales.length > 0
+                each sale in dbSales
+                  tr
+                    td #{new Date(sale.date).toLocaleDateString('en-GB')}
+                    td
+                      each item in sale.items
+                        div(style="margin-bottom: 2px;") #{item.product ? item.product.productname : 'General Item'}
+                    td
+                      each item in sale.items
+                        div(style="margin-bottom: 2px;") #{item.qty} #{item.unit || ''}
+                    td
+                      each item in sale.items
+                        div(style="margin-bottom: 2px; color: #64748b;") #{item.sellingprice.toLocaleString()}
+                    td.fw-bold.text-dark #{sale.total ? sale.total.toLocaleString() : 0} UGX
+                    td
+                      div.fw-bold(style="font-size:12.5px;") #{sale.customername}
+                      small.text-muted #{sale.customercontact}
+                    td.text-muted #{sale.attendant ? sale.attendant.fullname : 'unknown'}
+              else
+                tr
+                  td.text-center.text-muted(colspan='7' style="padding: 20px;") No business sales records compiled for this selected month.
+
+      //- 2. STOCK REGISTRY PANEL
+      #tabContent-stock.report-tab-panel.card.mb-4.d-none(style="border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);")
+        .card-header(style="background: #fff; border-bottom: 2px solid #2563eb; padding: 15px;")
+          h3.card-title.m-0(style="color: #2563eb; font-size: 1.15rem; font-weight: 700;") Available stock
+        .card-body.p-0
+          table.table.table-hover.m-0(style="font-size: 13.5px; vertical-align: middle;")
+            thead.table-light
+              tr
+                th Product Name
+                th Quantity in Stock
+                th Unit Cost
+                th Selling Price
+            tbody
+              if dbStock && dbStock.length > 0
+                each product in dbStock
+                  tr
+                    td.fw-bold #{product.productname}
+                    td
+                      if product.quantity === 0
+                        span.text-danger.fw-bold Out of Stock
+                      else if product.quantity <= 20
+                        span.text-warning.fw-bold Low Stock (#{product.quantity})
+                      else
+                        span.text-success #{product.quantity}
+                    td #{product.unitcost.toLocaleString()} UGX
+                    td.fw-bold #{product.sellingprice.toLocaleString()} UGX
+              else
+                tr
+                  td.text-center.text-muted(colspan='4' style="padding: 20px;") No stock items entered/logged within this selected month.
+
+      //- 3. SUPPLIER REGISTRY PANEL
+      #tabContent-supplier.report-tab-panel.card.mb-4.d-none(style="border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);")
+        .card-header(style="background: #fff; border-bottom: 2px solid #2563eb; padding: 15px;")
+          h3.card-title.m-0(style="color: #2563eb; font-size: 1.15rem; font-weight: 700;") 🤝 Supplier Details
+        .card-body.p-0
+          table.table.table-hover.m-0(style="font-size: 13.5px; vertical-align: middle;")
+            thead.table-light
+              tr
+                th Factory Name
+                th Factory Representative
+                th Contact info
+                th Product Supplied
+                th Qty
+                th Total
+                th Payment Status
+            tbody
+              if dbSupplierStock && dbSupplierStock.length > 0
+                each item in dbSupplierStock
+                  tr
+                    td #{item.factoryname}
+                    td.fw-bold #{item.suppliername}
+                    td #{item.suppliercontact}
+                    td #{item.productname}
+                    td #{item.originalQuantity}
+                    td.fw-bold UGX #{item.total.toLocaleString()}
+                    td
+                      if item.paymentstatus && item.paymentstatus.toLowerCase() === 'credit'
+                        span.badge.bg-danger Credit
+                      else if item.paymentstatus && item.paymentstatus.toLowerCase() === 'paid'
+                        span.badge.bg-success Paid
+                      else
+                        span.badge.bg-secondary #{item.paymentstatus}
+              else
+                tr
+                  td.text-center.text-muted(colspan='7' style="padding: 20px;") No active vendor distribution arrivals logged for this selected month.
+
+      //- 4. UNIFIED CUSTOMER DEPOSIT SCHEME TABLE PANEL
+      #tabContent-deposit.report-tab-panel.card.mb-4.d-none(style="border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);")
+        .card-header(style="background: #fff; border-bottom: 2px solid #2563eb; padding: 15px;")
+          h3.card-title.m-0(style="color: #2563eb; font-size: 1.15rem; font-weight: 700;") 💳 Customer Deposits Ledger
+        .card-body.p-0
+          table.table.table-hover.m-0(style="font-size: 13px; vertical-align: middle;")
+            thead.table-light
+              tr
+                th Customer Name
+                th Contact Details
+                th NIN / Address
+                th Prouducts Deposited on
+                th Total Owed
+                th Total Deposited
+                th Balance 
+                th Status
+            tbody
+              if customers && customers.length > 0
+                each customer in customers
+                  tr
+                    td.fw-bold.text-dark #{customer.fullName}
+                    td #{customer.phonenumber}
+                    td 
+                      div NIN: #{customer.nin || 'N/A'}
+                      small.text-muted #{customer.customeraddress}
+                    td
+                      if customer.depositedItems && customer.depositedItems.length > 0
+                        each order in customer.depositedItems
+                          div(style="margin-bottom: 2px; font-weight: 500;") 
+                            if order.productname && order.productname.productname
+                              | • #{order.productname.productname} (x#{order.quantity})
+                            else
+                              | • Hardware Item (x#{order.quantity})
+                      else
+                        span.text-muted.text-italic General Reference Contract
+                    td.fw-bold #{customer.total ? customer.total.toLocaleString() : '0'} UGX
+                    td.text-success.fw-bold #{customer.amountDeposited ? customer.amountDeposited.toLocaleString() : '0'} UGX
+                    td.text-danger.fw-bold #{customer.outstandingBalance ? customer.outstandingBalance.toLocaleString() : '0'} UGX
+                    td
+                      if customer.outstandingBalance <= 0
+                        span.badge.bg-success Settled
+                      else
+                        span.badge.bg-warning.text-dark Active Open
+              else
+                tr
+                  td.text-center.text-muted(colspan='8' style="padding: 20px;") No custom layaway accounts started within this selected month.
+
+  //- Interactive Click-To-Switch Tabs Engine Script
+  script.
+    function switchReportTab(targetTab) {
+      document.querySelectorAll('.report-tab-panel').forEach(panel => {
+        panel.classList.add('d-none');
+      });
+      document.querySelectorAll('.nav-link').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.getElementById('tabContent-' + targetTab).classList.remove('d-none');
+      document.getElementById('tabBtn-' + targetTab).classList.add('active');
+    }
+
+  //- Global Presentation and PDF Print Layout Stylesheet Overrides
+  style.
+    .nav-pills .nav-link.active { background-color: #2563eb !important; color: white !important; }
+    .nav-pills .nav-link { color: #475569; background: #f1f5f9; border-radius: 6px; }
+    
+    @media print {
+      .no-print, .sidebar, .top, .nav, button, script { 
+        display: none !important; 
+      }
+      body { 
+        background-color: #fff !important; 
+        color: #000 !important; 
+        font-size: 11pt; 
+      }
+      .main { 
+        width: 100% !important; 
+        max-width: 100% !important;
+        padding: 0 !important; 
+        margin: 0 !important; 
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+      }
+      .report-tab-panel, .report-tab-panel.d-none { 
+         display: block !important; 
+         visibility: visible !important;
+         opacity: 1 !important;
+         border: 1px solid #cbd5e1 !important; 
+         box-shadow: none !important; 
+         margin-bottom: 35px !important; 
+         page-break-inside: avoid;
+      }
+      .print-header-brand { 
+        display: block !important; 
+      }
+      @page { 
+        size: A4 portrait; 
+        margin: 1.5cm; 
+      }
+    }

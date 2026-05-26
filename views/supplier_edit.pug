@@ -1,30 +1,85 @@
+//- doctype html
+//- head
+//-   meta(charset='UTF-8')
+//-   meta(name='viewport' content='width=device-width, initial-scale=1')
+//-   title Supplier edit
+//-   link(rel='stylesheet' href='/css/stock_reg_form.css')
+//- .form-container
+//-   h2 Supplier edit form
+//-   form(action=`/supplier/edit/${stock._id}` method='post')
+//-     .row
+//-       .field
+//-         label(for='factoryname') Factory Name
+//-         input#factoryname(type='text' name="factoryame" value=stock.factoryname placeholder='e.g Richard')
+//-       .field
+//-         label(for='suppliername') Supplier Name
+//-         input#customername(type='text' name="suppliername" value=stock.suppliername placeholder='e.g Hima')
+//-     .row
+//-       .field
+//-         label(for='suppliercontact') Factory Contact
+//-         input#suppliercontact(type='text' name='suppliercontact' value=stock.suppliercontact pattern='[7][0-9]{8}' minlength='9', maxlength='9',  title='Enter a valid Ugandan number ' placeholder='e.g.,7XXXXXXXX ')
+//-       .field
+//-         label Payment Type
+//-         select(name='paymentstatus')
+//-           option(value='' disabled selected) Select payment Type
+//-           option(value='paid') Paid
+//-           option(value='credit') Credit
+
+
+//-     button.btn-save(type='submit') Confirm &amp; edit  stock
+
 doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1')
   title Supplier edit
   link(rel='stylesheet' href='/css/stock_reg_form.css')
+  style.
+    /* Grouping the buttons together nicely */
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    /* Style for the cancel link to make it look like a sleek button */
+    .btn-cancel {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: #64748b; /* Neutral gray */
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 0.5rem;
+      text-align: center;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+    .btn-cancel:hover {
+      background-color: #475569;
+    }
 .form-container
   h2 Supplier edit form
   form(action=`/supplier/edit/${stock._id}` method='post')
     .row
       .field
         label(for='factoryname') Factory Name
-        input#factoryname(type='text' name="factoryame" value=stock.factoryname placeholder='e.g Richard')
+        input#factoryname(type='text' name="factoryname" value=stock.factoryname placeholder='e.g Hima')
       .field
         label(for='suppliername') Supplier Name
-        input#customername(type='text' name="suppliername" value=stock.suppliername placeholder='e.g Hima')
+        input#suppliername(type='text' name="suppliername" value=stock.suppliername placeholder='e.g Richard')
     .row
       .field
         label(for='suppliercontact') Factory Contact
-        input#suppliercontact(type='text' name='suppliercontact' value=stock.suppliercontact pattern='[7][0-9]{8}' minlength='9', maxlength='9',  title='Enter a valid Ugandan number ' placeholder='e.g.,7XXXXXXXX ')
+        //- Strips out any accidental country codes to show the raw stored string
+        input#suppliercontact(type='text' name='suppliercontact' value=(stock.suppliercontact ? stock.suppliercontact.replace('+256', '') : '') pattern='[7][0-9]{8}' minlength='9', maxlength='9', title='Enter a valid Ugandan number ' placeholder='e.g.,7XXXXXXXX ')
       .field
         label Payment Type
         select(name='paymentstatus')
-          option(value='' disabled selected) Select payment Type
-          option(value='paid') Paid
-          option(value='credit') Credit
+          option(value='' disabled) Select payment Type
+          option(value='paid' selected=(stock.paymentstatus === 'paid')) Paid
+          option(value='credit' selected=(stock.paymentstatus === 'credit')) Credit
 
-
-    button.btn-save(type='submit') Confirm &amp; edit  stock
-
+    //- Clean action button alignment
+    .button-group
+      button.btn-save(type='submit') Confirm &amp; edit supplier
+      a.btn-cancel(href='/supplier') Cancel

@@ -45,6 +45,7 @@ depositedItems: [
     type: Number,
     required: true,
   },
+  deliverymethod: { type: String, enum: ['hardware', 'pickup'], required: true },
   transportCost: { 
     type: Number, 
   },

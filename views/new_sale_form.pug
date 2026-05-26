@@ -31,14 +31,22 @@ head
           title='Enter a valid Ugandan number'
           placeholder='7XXXXXXXX'
         )
-    .row
       .field
         label(for='customeraddress') Customer Address
         input#customeraddress(type='text' name="customeraddress" required placeholder='e.g Nansana,Wakiso')
+    .row
+      
+      
+      //- row
+      .field
+        label(for='deliverymethod') Delivery Method
+        select#deliverymethod(name='deliverymethod' required)
+          option(value='' selected) Select delivery method
+          option(value='hardware') Hardware Delivery
+          option(value='pickup') Customer's Transport
       .field
         label(for='customerdistance') Customer Distance (Km)
         input#customerdistance(type='number' name='customerdistance' required placeholder='1 Km')
-    
     hr
     h3 Products Items Ordered
     
@@ -104,5 +112,14 @@ script.
     
     container.appendChild(newRow);
   }
-
-
+  document.getElementById('deliverymethod').addEventListener('change', function() {
+  const distanceInput = document.getElementById('customerdistance');
+  if (this.value === 'pickup') {
+    distanceInput.value = 0;
+    distanceInput.setAttribute('readonly', true);
+  } else {
+    distanceInput.removeAttribute('readonly');
+    distanceInput.value = '';
+  }
+  });
+  

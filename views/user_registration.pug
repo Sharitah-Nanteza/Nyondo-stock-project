@@ -1,3 +1,4 @@
+
 doctype html
 head
   meta(charset='UTF-8')
@@ -12,31 +13,36 @@ head
   form(action='/register' method='post')
     .form-group
       label(for='fullname') Full Name
-      input#fullname(type='text' name='fullname' placeholder='Enter your full name' )
+      input#fullname(type='text' name='fullname' placeholder='Enter your full name' required)
+    
     .form-group
       label(for='email') Email
-      input#email(type='email' name='email' placeholder='Enter your email' )
+      input#email(type='email' name='email' placeholder='Enter your email' required)
+    
     .form-group
       label(for='phonenumber') Phone Number
-      input#phonenumber(type='text' name='phonenumber' placeholder='7XXXXXXXX' pattern='[7][0-9]{8}' minlength='9' maxlength='9'  title='Enter a valid Ugandan number' )
+      //- Added required attribute
+      input#phonenumber(type='text' name='phonenumber' placeholder='7XXXXXXXX' pattern='[7][0-9]{8}' minlength='9' maxlength='9' title='Enter a valid Ugandan number starting with 7' required)
+    
     .form-group
       label(for='nin') NIN
-      input#nin(type='text' name='nin' pattern='C[MF][0-9]{10}[A-Z]{3}' title='Enter a valid Ugandan NIN'
- placeholder='CF23MXXXXXXX')
+      //- Added required attribute and cleaned up the pattern to match standard 14-character Ugandan NINs
+      input#nin(type='text' name='nin' pattern='[A-Z]{2}[0-9]{2}[0-9A-Z]{10}' title='Enter a valid 14-character Ugandan NIN' placeholder='CF23MXXXXXXX' required)
+    
     .form-group
       label(for='role') Role
-      select(name='userrole')
+      //- Added required attribute directly to the select tag
+      select(name='userrole' required)
         option(value='' disabled selected) Select user role
         option(value='admin') Admin
-        option(value='stockmanager') Stock  Manager
+        option(value='stockmanager') Stock Manager
         option(value='salesattendant') Sales attendant
+    
     .form-group
       label(for='password') Password
-      input#password(type='password' name='password' placeholder='At least 6 characters')
+      //- Added required and set minlength='6' to match your placeholder instruction
+      input#password(type='password' name='password' placeholder='At least 6 characters' minlength='6' required)
+    
     .button-group
       button(type='submit') Create Account
       a.btn-secondary(href='/admin-dashboard') Cancel
-    //- .button-group
-    //-   button(type='submit') Create Account
-    //-   a.btn.btn-secondary(href='/admin-dashboard') Cancel
-
