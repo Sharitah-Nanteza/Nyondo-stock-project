@@ -11,7 +11,12 @@ head
   if error
     div(style="color: red; margin-bottom: 15px; font-weight: bold;") #{error}
   h2 New sale registration form
-  form(action='/addsale' method='post')
+  
+  form(
+    action='/addsale' 
+    method='post'
+    onsubmit="return confirm('Are you sure you want to confirm and record this sale transaction?');"
+  )
     
     //- Customer details container
     h3 Customer Details
@@ -35,13 +40,10 @@ head
         label(for='customeraddress') Customer Address
         input#customeraddress(type='text' name="customeraddress" required placeholder='e.g Nansana,Wakiso')
     .row
-      
-      
-      //- row
       .field
         label(for='deliverymethod') Delivery Method
         select#deliverymethod(name='deliverymethod' required)
-          option(value='' selected) Select delivery method
+          option(value='' selected disabled) Select delivery method
           option(value='hardware') Hardware Delivery
           option(value='pickup') Customer's Transport
       .field
@@ -93,7 +95,6 @@ script.
   function updatePrice(selectElement) {
     const selectedOption = selectElement.options[selectElement.selectedIndex];
     const price = selectedOption.getAttribute('data-price');
-    // Find the selling price field within the exact same row block
     const row = selectElement.closest('.product-row');
     row.querySelector('.sellingprice').value = price || '';
   }
@@ -104,7 +105,6 @@ script.
     const firstRow = container.querySelector('.product-row');
     const newRow = firstRow.cloneNode(true);
     
-    // Clear selections and text inputs in our brand new cloned row
     newRow.querySelector('.productSelect').selectedIndex = 0;
     newRow.querySelector('.sellingprice').value = '';
     newRow.querySelector('input[name="qty"]').value = '';
@@ -112,14 +112,15 @@ script.
     
     container.appendChild(newRow);
   }
+
+  // Event Listener for delivery changes to automatically zero out distance and mark as read-only
   document.getElementById('deliverymethod').addEventListener('change', function() {
-  const distanceInput = document.getElementById('customerdistance');
-  if (this.value === 'pickup') {
-    distanceInput.value = 0;
-    distanceInput.setAttribute('readonly', true);
-  } else {
-    distanceInput.removeAttribute('readonly');
-    distanceInput.value = '';
-  }
+    const distanceInput = document.getElementById('customerdistance');
+    if (this.value === 'pickup') {
+      distanceInput.value = 0;
+      distanceInput.setAttribute('readonly', true);
+    } else {
+      distanceInput.removeAttribute('readonly');
+      distanceInput.value = '';
+    }
   });
-  

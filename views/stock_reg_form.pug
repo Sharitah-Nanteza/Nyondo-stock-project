@@ -97,7 +97,14 @@ head
   link(rel='stylesheet' href='/css/stock_reg_form.css')
 .form-container
   h2 Stock registration form
-  form(action='/add_stock' method='post' enctype="multipart/form-data")
+  
+  //- FIXED INLINE: Added the onsubmit confirmation prompt
+  form(
+    action='/add_stock' 
+    method='post' 
+    enctype="multipart/form-data"
+    onsubmit="return confirm('Are you sure you want to register and add this stock entry to inventory?');"
+  )
     .row
       .field
         label(for='productname') Product Name

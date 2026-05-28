@@ -20,13 +20,13 @@ const registrationSchema = new mongoose.Schema({
   type: String,
   required:true,
  },
- nin: {
+nin: {
   type: String,
   trim: true,
-  required:true,
+  required: true,
   uppercase: true,
-  match: [/^C[MF]\d{10}[A-Z]{3}$/, "Enter a valid Ugandan NIN"]
- },
+  match: [/^C[MF][A-Z0-9]{12}$/, "Enter a valid Ugandan NIN"]
+},
  userrole: {
   type: String,
   required:true,

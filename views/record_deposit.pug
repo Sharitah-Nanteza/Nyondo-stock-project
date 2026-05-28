@@ -6,7 +6,13 @@ head
   link(rel='stylesheet' href='/css/record_deposit.css')
 .form-card
   h2 Record New Deposit
-  form(action=`/records/${customer._id}` method='POST')
+  
+  //- FIXED INLINE: Added the onsubmit confirmation prompt
+  form(
+    action=`/records/${customer._id}` 
+    method='POST'
+    onsubmit="return confirm('Are you sure you want to confirm and record this new payment installment for this customer?');"
+  )
     //- // 1. Customer Name
     //- .input-group
     //-   label(for='customer_name') Name of Customer
@@ -48,4 +54,3 @@ head
           type='button'
           onclick="window.location.href='/deposits'"
         ) Cancel
-

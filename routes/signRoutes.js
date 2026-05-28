@@ -9,21 +9,21 @@ const {
   isSalesAttendantOrAdmin,
 } = require("../middleware/auth");
 //Users register.
-router.get("/registration",  async (req, res) => {
+router.get("/registration", async (req, res) => {
   res.render("user_registration");
 });
 
-router.post("/register",   async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
     const { fullname, email, phonenumber, nin, userrole, password } = req.body;
 
     // Phone number validation
-   const phone = '+256'+ phonenumber
+    const phone = "+256" + phonenumber;
 
     // NIN validation
-    const ninRegex = /^C[MF]\d{10}[A-Z]{3}$/;
+    const ninRegex = /^C[MF][A-Z0-9]{12}$/;
 
-    if (!ninRegex.test(nin.toUpperCase())) {
+    if (!ninRegex.test(nin.trim().toUpperCase())) {
       return res.render("user_registration", {
         error: "Enter a valid Ugandan NIN",
       });
@@ -42,7 +42,7 @@ router.post("/register",   async (req, res) => {
     const newUser = new Registration({
       fullname,
       email: email.toLowerCase(),
-      phonenumber:phone,
+      phonenumber: phone,
       nin: nin.toUpperCase(),
       userrole,
     });

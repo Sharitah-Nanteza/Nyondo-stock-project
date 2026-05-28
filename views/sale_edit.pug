@@ -27,9 +27,16 @@ head
     .btn-cancel:hover {
       background-color: #475569;
     }
+
 .form-container
   h2 Sales edit form
-  form(action=`/sale/edit/${sale._id}` method='post')
+  
+  //- FIXED INLINE: Added an onsubmit handler that acts as an inline alert/confirmation block
+  form(
+    action=`/sale/edit/${sale._id}` 
+    method='post' 
+    onsubmit="return confirm('Are you sure you want to save these changes and modify this sale record?');"
+  )
     .row
       .field
         label(for='qty') Quantity
