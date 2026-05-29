@@ -3,23 +3,22 @@ const router = express.Router();
 const Deposit = require("../models/Deposit");
 const Stock = require("../models/Stock");
 
+// Shared product filters for reloading rendering page variations easily
+const targetMaterials = [
+  "Cement CEM IIN",
+  "Cement CEM IIIN",
+  "Iron Bars 10mm",
+  "Iron Bars 12mm",
+  "Iron Bars 16mm",
+  "Iron Sheets Gauge 28 (Red)",
+  "Iron Sheets Gauge 28 (Green)",
+  "Iron Sheets Gauge 30 (Blue)",
+];
+
 // 1. Fetch Form View
 router.get("/deposited", async (req, res) => {
   try {
-    const materials = await Stock.find({
-      productname: {
-        $in: [
-          "Cement CEM IIN",
-          "Cement CEM IIIN",
-          "Iron Bars 10mm",
-          "Iron Bars 12mm",
-          "Iron Bars 16mm",
-          "Iron Sheets Gauge 28 (Red)",
-          "Iron Sheets Gauge 28 (Green)",
-          "Iron Sheets Gauge 30 (Blue)",
-        ],
-      },
-    });
+    const materials = await Stock.find({ productname: { $in: targetMaterials } });
     res.render("deposit_reg_form", { items: materials });
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -27,7 +26,7 @@ router.get("/deposited", async (req, res) => {
   }
 });
 
-// 2. Submit New Multi-Item Deposit (WITH UPDATED DELIVERY METHOD CONTROL)
+// 2. Submit New Multi-Item Deposit
 router.post("/deposit", async (req, res) => {
   try {
     const {
@@ -42,47 +41,50 @@ router.post("/deposit", async (req, res) => {
       amountDeposited,
     } = req.body;
 
-    const phone = "+256" + phonenumber;
+    // Standardize local 07... numbers to database international format
+    let rawPhone = phonenumber.trim();
+    if (rawPhone.startsWith("0")) {
+      rawPhone = rawPhone.substring(1);
+    }
+    const phone = "+256" + rawPhone;
     
-    // Evaluate Distance and Transport Costs explicitly by checking deliverymethod
     let parsedDistance = parseFloat(customerdistance) || 0;
     let transportCost = 30000;
 
     if (deliverymethod === 'pickup') {
-      // Customer's Transport: No transport fee charged, distance is zeroed
       parsedDistance = 0;
       transportCost = 0;
     }
 
-    // Normalize data inputs into arrays so processing loops function identically
+    // Normalize input data into arrays for processing consistency
     const productIds = Array.isArray(productname) ? productname : [productname];
     const quantities = Array.isArray(quantity) ? quantity : [quantity];
 
     let totalItemsValue = 0;
     const itemsToProcess = [];
 
-    // Process every hardware product submission line iteratively
+    // Process each product row submitted from the dynamic table lines
     for (let i = 0; i < productIds.length; i++) {
       if (!productIds[i]) continue; 
 
       const productDetails = await Stock.findById(productIds[i]);
       if (!productDetails) {
-        const materials = await Stock.find({ productname: { $in: ["Cement CEM IIN", "Cement CEM IIIN", "Iron Bars 10mm", "Iron Bars 12mm", "Iron Bars 16mm", "Iron Sheets Gauge 28 (Red)", "Iron Sheets Gauge 28 (Green)", "Iron Sheets Gauge 30 (Blue)"] } });
+        const materials = await Stock.find({ productname: { $in: targetMaterials } });
         return res.status(404).render("deposit_reg_form", { items: materials, error: "One of the chosen products was not found." });
       }
 
       const orderQty = parseInt(quantities[i], 10);
       
-      // Stock allocation safety validation
+      // Stock protection barrier logic
       if (productDetails.quantity < orderQty) {
-        const materials = await Stock.find({ productname: { $in: ["Cement CEM IIN", "Cement CEM IIIN", "Iron Bars 10mm", "Iron Bars 12mm", "Iron Bars 16mm", "Iron Sheets Gauge 28 (Red)", "Iron Sheets Gauge 28 (Green)", "Iron Sheets Gauge 30 (Blue)"] } });
+        const materials = await Stock.find({ productname: { $in: targetMaterials } });
         return res.status(400).render("deposit_reg_form", { 
           items: materials, 
-          error: `Insufficient stock for ${productDetails.productname}. Available: ${productDetails.quantity}` 
+          error: `Insufficient stock for ${productDetails.productname}. Available inventory: ${productDetails.quantity}` 
         });
       }
 
-      // Deduct inventory stock allocation balance
+      // Decrement inventory metrics directly
       productDetails.quantity -= orderQty;
       await productDetails.save();
 
@@ -96,7 +98,7 @@ router.post("/deposit", async (req, res) => {
       });
     }
 
-    // Dynamic fallback check if delivery method is 'hardware'
+    // Calculate free hardware transport exemptions if condition profiles are satisfied
     if (deliverymethod === 'hardware') {
       transportCost = (parsedDistance <= 10 && totalItemsValue >= 500000) ? 0 : 30000;
     }
@@ -126,15 +128,14 @@ router.post("/deposit", async (req, res) => {
 
   } catch (error) {
     console.error("Submission failed:", error);
-    const materials = await Stock.find({ productname: { $in: ["Cement CEM IIN", "Cement CEM IIIN", "Iron Bars 10mm", "Iron Bars 12mm", "Iron Bars 16mm", "Iron Sheets Gauge 28 (Red)", "Iron Sheets Gauge 28 (Green)", "Iron Sheets Gauge 30 (Blue)"] } });
+    const materials = await Stock.find({ productname: { $in: targetMaterials } });
     return res.status(500).render("deposit_reg_form", { items: materials, error: error.message });
   }
 });
 
-// 3. Customer Dashboard View (FIXED SORT CRITERIA)
+// 3. Customer Dashboard View (Shows latest 3 profiles)
 router.get("/deposits", async (req, res) => {
   try {
-    // FIXED: Sorted by '_id: -1' (or 'date: -1') since 'createdAt' doesn't exist in your schema
     const limitedRecords = await Deposit.find()
       .populate("depositedItems.productname")
       .sort({ _id: -1 }) 
@@ -143,7 +144,7 @@ router.get("/deposits", async (req, res) => {
     res.render("deposit", { customers: limitedRecords });
   } catch (error) {
     console.error("Failed to load dashboard:", error);
-    res.status(500).render("deposit", { customers: [], error: "Database error" });
+    res.status(500).render("deposit", { customers: [], error: "Database error reading records" });
   }
 });
 
@@ -151,11 +152,11 @@ router.get("/deposits", async (req, res) => {
 router.get("/record/:id", async (req, res) => {
   try {
     const customerData = await Deposit.findById(req.params.id);
-    if (!customerData) return res.status(404).send("Customer not found");
+    if (!customerData) return res.status(404).send("Customer profile not located");
     res.render("record_deposit", { customer: customerData });
   } catch (error) {
     console.error("Error loading form:", error);
-    res.status(500).send("Server Error loading form");
+    res.status(500).send("Server Error processing operational view");
   }
 });
 
@@ -181,7 +182,7 @@ router.post("/records/:id", async (req, res) => {
     res.render("a", { customer: customerData });
   } catch (error) {
     console.error("Failed to process transaction update:", error);
-    res.status(500).send("Internal Server Error processing deposit");
+    res.status(500).send("Internal Server Error processing deposit logs");
   }
 });
 

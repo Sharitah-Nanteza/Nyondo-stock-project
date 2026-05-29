@@ -53,10 +53,10 @@ router.get("/admin-dashboard", async (req, res) => {
       supplierCredits: 0,
       lowStockCount: stockAgg.length > 0 ? stockAgg[0].lowStockCount : 0,
     };
-    
+
     const dbStock = await Stock.find().sort({ date: -1 });
     stats.totalProducts = dbStock.length;
-    
+
     const salesAgg = await Sale.aggregate([
       { $group: { _id: null, grandTotal: { $sum: "$total" } } },
     ]);
@@ -68,6 +68,20 @@ router.get("/admin-dashboard", async (req, res) => {
   } catch (error) {
     console.log(error.message);
     res.status(400).send("Oops! Stats not found");
+  }
+});
+
+//DELETE USER
+router.post("/delete-user/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    await Registration.findByIdAndDelete(userId);
+
+    res.redirect("/admin-dashboard");
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -122,7 +136,7 @@ router.get("/manager-dashboard", async (req, res) => {
         },
       },
     ]);
-    
+
     let stats = {
       stockValue: stockAgg.length > 0 ? stockAgg[0].grandStock : 0,
       outOfStockCount: stockAgg.length > 0 ? stockAgg[0].outOfStockCount : 0,
@@ -138,61 +152,79 @@ router.get("/manager-dashboard", async (req, res) => {
 });
 
 // REPORTS
-router.get('/reports', async (req, res) => {
-    try {
-        let selectedMonth = req.query.month; 
-        if (!selectedMonth) {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            selectedMonth = `${year}-${month}`;
-        }
-
-        const [yearStr, monthStr] = selectedMonth.split('-');
-        const startDate = new Date(parseInt(yearStr), parseInt(monthStr) - 1, 1, 0, 0, 0, 0);
-        const endDate = new Date(parseInt(yearStr), parseInt(monthStr), 0, 23, 59, 59, 999);
-
-        const dateFilter = {
-            date: {
-                $gte: startDate,
-                $lte: endDate
-            }
-        };
-
-        const [inventoryItems, vendorRecords, salesRecords, schemeCustomers] = await Promise.all([
-            Stock.find(dateFilter).sort({ date: -1 }), 
-            Stock.find(dateFilter).sort({ date: -1 }), 
-            Sale.find(dateFilter)
-                .populate('attendant')
-                .populate({
-                    path: 'items.product',
-                    model: 'Stock'
-                })
-                .sort({ date: -1 }),                   
-            
-            // Fixed population pattern deep targeting your precise array path
-            Deposit.find(dateFilter)
-                .populate({
-                    path: 'depositedItems.productname',
-                    model: 'Stock'
-                })
-                .sort({ _id: -1 }) 
-        ]);
-
-        res.render('reports', {
-            title: 'Nyondo Summary Report',
-            user: req.user || req.session?.user || { userrole: 'admin' },
-            dbStock: inventoryItems,
-            dbSupplierStock: vendorRecords,
-            dbSales: salesRecords,
-            customers: schemeCustomers,
-            currentFilterMonth: selectedMonth 
-        });
-
-    } catch (error) {
-        console.error("Critical Report Data Query Error:", error.message);
-        res.status(500).send("An error occurred while pulling your master system listings.");
+router.get("/reports", async (req, res) => {
+  try {
+    let selectedMonth = req.query.month;
+    if (!selectedMonth) {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      selectedMonth = `${year}-${month}`;
     }
+
+    const [yearStr, monthStr] = selectedMonth.split("-");
+    const startDate = new Date(
+      parseInt(yearStr),
+      parseInt(monthStr) - 1,
+      1,
+      0,
+      0,
+      0,
+      0,
+    );
+    const endDate = new Date(
+      parseInt(yearStr),
+      parseInt(monthStr),
+      0,
+      23,
+      59,
+      59,
+      999,
+    );
+
+    const dateFilter = {
+      date: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    };
+
+    const [inventoryItems, vendorRecords, salesRecords, schemeCustomers] =
+      await Promise.all([
+        Stock.find(dateFilter).sort({ date: -1 }),
+        Stock.find(dateFilter).sort({ date: -1 }),
+        Sale.find(dateFilter)
+          .populate("attendant")
+          .populate({
+            path: "items.product",
+            model: "Stock",
+          })
+          .sort({ date: -1 }),
+
+        // Fixed population pattern deep targeting your precise array path
+        Deposit.find(dateFilter)
+          .populate({
+            path: "depositedItems.productname",
+            model: "Stock",
+          })
+          .sort({ _id: -1 }),
+      ]);
+
+    res.render("reports", {
+      title: "Nyondo Summary Report",
+      user: req.user || req.session?.user || { userrole: "admin" },
+      dbStock: inventoryItems,
+      dbSupplierStock: vendorRecords,
+      dbSales: salesRecords,
+      customers: schemeCustomers,
+      currentFilterMonth: selectedMonth,
+    });
+  } catch (error) {
+    console.error("Critical Report Data Query Error:", error.message);
+    res
+      .status(500)
+      .send("An error occurred while pulling your master system listings.");
+  }
 });
 
 module.exports = router;

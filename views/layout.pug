@@ -27,9 +27,10 @@ head
           a.nav-link.active(href='/manager-dashboard') Dashboard
         else if user.userrole === "salesattendant"
           a.nav-link.active(href='/sales-dashboard') Dashboard
-
-        li.nav-item
-          a.nav-link(href='/registration') Register User
+        if user.userrole === "admin"
+          li.nav-item
+            a.nav-link(href='/registration') Register User
+        
         li.nav-item
           a.nav-link(href="/stock") Stock Management 
         if user.userrole === "admin" || user.userrole === "salesattendant"

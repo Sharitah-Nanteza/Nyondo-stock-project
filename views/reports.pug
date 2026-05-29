@@ -17,18 +17,18 @@ block content
           input#monthPicker.form-control.form-control-sm(type="month" name="month" value=currentFilterMonth onchange="this.form.submit()" style="width:170px; cursor:pointer; font-weight:600;")
         
         button.btn(onclick="window.print()" style="background-color: #2563eb; color: white; font-weight: bold; padding: 10px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.08);")
-          | 📄 Print Master Report to PDF
+          | Print Master Report to PDF
 
     //- On-Screen Dynamic Tab Pill Controls
     ul.nav.nav-pills.mb-4.no-print(style="background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); gap: 10px;")
       li.nav-item
-        button#tabBtn-sales.nav-link.active(onclick="switchReportTab('sales')" style="font-weight: 600; padding: 10px 20px;") 📈 Sales Summary
+        button#tabBtn-sales.nav-link.active(onclick="switchReportTab('sales')" style="font-weight: 600; padding: 10px 20px;") Sales Summary
       li.nav-item
-        button#tabBtn-stock.nav-link(onclick="switchReportTab('stock')" style="font-weight: 600; padding: 10px 20px;") 📦 Available Stock
+        button#tabBtn-stock.nav-link(onclick="switchReportTab('stock')" style="font-weight: 600; padding: 10px 20px;") Available Stock
       li.nav-item
-        button#tabBtn-supplier.nav-link(onclick="switchReportTab('supplier')" style="font-weight: 600; padding: 10px 20px;") 🤝 Supplier Details
+        button#tabBtn-supplier.nav-link(onclick="switchReportTab('supplier')" style="font-weight: 600; padding: 10px 20px;") Supplier Details
       li.nav-item
-        button#tabBtn-deposit.nav-link(onclick="switchReportTab('deposit')" style="font-weight: 600; padding: 10px 20px;") 💳 Customer Deposits
+        button#tabBtn-deposit.nav-link(onclick="switchReportTab('deposit')" style="font-weight: 600; padding: 10px 20px;") Customer Deposits
 
     //- ================= PRINT DISPATCH ENGINE WRAPPER =================
     #printableMasterRegistry
@@ -42,7 +42,7 @@ block content
       //- 1. SALES REGISTRY PANEL
       #tabContent-sales.report-tab-panel.card.mb-4(style="border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);")
         .card-header(style="background: #fff; border-bottom: 2px solid #2563eb; padding: 15px;")
-          h3.card-title.m-0(style="color: #2563eb; font-size: 1.15rem; font-weight: 700;") 📈 Sales Summary
+          h3.card-title.m-0(style="color: #2563eb; font-size: 1.15rem; font-weight: 700;") Sales Summary
         .card-body.p-0
           table.table.table-hover.m-0(style="font-size: 13px; vertical-align: middle;")
             thead.table-light
@@ -110,7 +110,7 @@ block content
       //- 3. SUPPLIER REGISTRY PANEL
       #tabContent-supplier.report-tab-panel.card.mb-4.d-none(style="border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);")
         .card-header(style="background: #fff; border-bottom: 2px solid #2563eb; padding: 15px;")
-          h3.card-title.m-0(style="color: #2563eb; font-size: 1.15rem; font-weight: 700;") 🤝 Supplier Details
+          h3.card-title.m-0(style="color: #2563eb; font-size: 1.15rem; font-weight: 700;") Supplier Details
         .card-body.p-0
           table.table.table-hover.m-0(style="font-size: 13.5px; vertical-align: middle;")
             thead.table-light
@@ -146,7 +146,7 @@ block content
       //- 4. UNIFIED CUSTOMER DEPOSIT SCHEME TABLE PANEL
       #tabContent-deposit.report-tab-panel.card.mb-4.d-none(style="border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);")
         .card-header(style="background: #fff; border-bottom: 2px solid #2563eb; padding: 15px;")
-          h3.card-title.m-0(style="color: #2563eb; font-size: 1.15rem; font-weight: 700;") 💳 Customer Deposits Ledger
+          h3.card-title.m-0(style="color: #2563eb; font-size: 1.15rem; font-weight: 700;") Customer Deposits Ledger
         .card-body.p-0
           table.table.table-hover.m-0(style="font-size: 13px; vertical-align: middle;")
             thead.table-light

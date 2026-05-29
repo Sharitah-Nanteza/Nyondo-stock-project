@@ -6,8 +6,11 @@ html
     title Nyondo Hardware - Customer Deposit Registration
     link(rel='stylesheet' href='/css/deposit_reg_form.css')
     style.
-      .deposit-item-row { border-bottom: 1px dotted #bbb; padding-bottom: 15px; margin-bottom: 15px; }
-      .btn-add-more { background-color: #007bff; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; margin-bottom: 15px; font-weight: bold;}
+      .deposit-item-row { border-bottom: 1px dotted #bbb; padding-bottom: 15px; margin-bottom: 15px; position: relative; }
+      .btn-add-more { background-color: #007bff; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px; margin-bottom: 15px; font-weight: bold;}
+      .btn-add-more:hover { background-color: #0056b3; }
+      .btn-remove-row { color: #dc3545; background: none; border: none; cursor: pointer; font-weight: bold; font-size: 14px; margin-top: 8px; display: inline-flex; align-items: center; gap: 4px; }
+      .btn-remove-row:hover { text-decoration: underline; }
   
   body
     .container
@@ -19,7 +22,6 @@ html
           if error
             div(style="color: red; font-weight: bold; margin-bottom: 15px;") #{error}
           
-          //- FIXED INLINE: Added the onsubmit confirmation prompt
           form#depositForm(
             action='/deposit' 
             method='POST'
@@ -34,24 +36,42 @@ html
               .form-row
                 .form-group.col
                   label(for='nin') NIN 
-                  input#nin(type='text' name='nin' pattern='C[MF][0-9]{10}[A-Z]{3}' placeholder='CF23MXXXXXXX' title='Enter a valid Ugandan number')
+                  input#nin(
+                    type='text' 
+                    name='nin' 
+                    pattern='^C[MF][0-9]{2}[0-9A-Z]{10}$'
+                    maxlength='14'
+                    required=''
+                    style='text-transform: uppercase;'
+                    oninput="this.value = this.value.toUpperCase();"
+                    placeholder='e.g., CM9501234567A8' 
+                    title='Enter a valid 14-character Ugandan Citizen NIN starting with CM or CF (e.g., CM9501234567A8)'
+                  )
                 .form-group.col
                   label(for='phonenumber') Phone Number
-                  input#phonenumber(type='text' name='phonenumber' placeholder='e.g., 7XXXXXXXX' pattern='[7][0-9]{8}' minlength='9' maxlength='9' title='Enter a valid Ugandan number')
+                  input#phonenumber(
+                    type='text' 
+                    name='phonenumber' 
+                    placeholder='e.g., 07XXXXXXXX' 
+                    pattern='[0][7][0-9]{8}' 
+                    minlength='10' 
+                    maxlength='10' 
+                    required=''
+                    title='Enter a valid 10-digit Ugandan number starting with 07'
+                  )
                 .form-group.col
                   label(for='customeraddress') Customer Address
-                  input#customeraddress(type='text' name="customeraddress" required placeholder='e.g Nansana,Wakiso')
+                  input#customeraddress(type='text' name="customeraddress" required='' placeholder='e.g Nansana, Wakiso')
               .form-row
-                
                 .form-group.col
                   label(for='deliverymethod') Delivery Method
-                  select#deliverymethod(name='deliverymethod' required)
-                    option(value='' selected disabled) Select delivery method
+                  select#deliverymethod(name='deliverymethod' required='')
+                    option(value='' selected='' disabled='') Select delivery method
                     option(value='hardware') Hardware Delivery
                     option(value='pickup') Customer's Transport
                 .form-group.col
                   label(for='customerdistance') Customer Distance (Km)
-                  input#customerdistance(type='number' name='customerdistance' placeholder='1 Km')
+                  input#customerdistance(type='number' name='customerdistance' min='0' placeholder='1 Km' required='')
             
             // Section: Deposit Details
             fieldset.form-section
@@ -62,13 +82,13 @@ html
                 .deposit-item-row
                   .form-group
                     label Product Name
-                    select(name='productname' required) 
-                      option(value='' selected disabled) Select product
+                    select(name='productname' required='') 
+                      option(value='' selected='' disabled='') Select product
                       if items && items.length > 0
                         each product in items 
                           option(value=product._id) #{product.productname} (Stock: #{product.quantity} | Price: #{product.sellingprice} UGX)
                       else 
-                        option(disabled) No items available
+                        option(disabled='') No items available
                   .form-row
                     .form-group.col
                       label Quantity
@@ -85,8 +105,7 @@ html
             
             // Action Buttons
             .button-group
-              button.btn.btn-primary(type='submit')
-                | Register Deposit
+              button.btn.btn-primary(type='submit') Register Deposit
               a.btn.btn-secondary(href='/deposits') Cancel
 
     script.
@@ -95,14 +114,30 @@ html
         const targetRow = wrapper.querySelector('.deposit-item-row');
         const clonedRow = targetRow.cloneNode(true);
         
-        // Reset selections and input states inside our newly structural segment
+        // Clear old input states inside our newly structural segment
         clonedRow.querySelector('select[name="productname"]').selectedIndex = 0;
         clonedRow.querySelector('input[name="quantity"]').value = '';
         
+        // Remove any existing dynamic removal buttons from the cloned copy before adding a new one
+        const existingRemoveBtn = clonedRow.querySelector('.btn-remove-row');
+        if (existingRemoveBtn) {
+          existingRemoveBtn.remove();
+        }
+        
+        // Build a fresh dynamic removal trigger
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn-remove-row';
+        removeBtn.innerHTML = '✕ Remove Item';
+        removeBtn.onclick = function() {
+          clonedRow.remove();
+        };
+        
+        clonedRow.appendChild(removeBtn);
         wrapper.appendChild(clonedRow);
       }
 
-      // Safe DOM Listener Event Attachment for Delivery Control
+      // Handle Delivery Logic Locking
       document.addEventListener('DOMContentLoaded', function() {
         const deliveryDropdown = document.getElementById('deliverymethod');
         const distanceInput = document.getElementById('customerdistance');
@@ -112,10 +147,12 @@ html
             if (this.value === 'pickup') {
               distanceInput.value = 0;
               distanceInput.setAttribute('readonly', 'true');
-              distanceInput.style.backgroundColor = '#f1f5f9'; // Visual cue showing locked field
+              distanceInput.style.backgroundColor = '#f1f5f9'; // Greyed out locked cue
             } else {
               distanceInput.removeAttribute('readonly');
-              distanceInput.value = '';
+              if (distanceInput.value === '0') {
+                distanceInput.value = '';
+              }
               distanceInput.style.backgroundColor = '#ffffff';
             }
           });

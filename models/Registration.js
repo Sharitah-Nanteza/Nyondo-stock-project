@@ -25,7 +25,8 @@ nin: {
   trim: true,
   required: true,
   uppercase: true,
-  match: [/^C[MF][A-Z0-9]{12}$/, "Enter a valid Ugandan NIN"]
+  // match: [/^C[MF][A-Z0-9]{12}$/, "Enter a valid Ugandan NIN"]
+  match: [/^C[MF][0-9]{2}[0-9A-Z]{10}$/, "Enter a valid 14-character Ugandan Citizen NIN starting with CM or CF"],
 },
  userrole: {
   type: String,

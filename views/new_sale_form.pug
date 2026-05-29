@@ -1,126 +1,281 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1')
-  title New sale form
-  link(rel='stylesheet' href='/css/new_sale_form.css')
-  style.
-    .product-row { border-bottom: 1px dashed #ccc; padding-bottom: 15px; margin-bottom: 15px; }
-    .btn-add-item { background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer; margin-bottom: 15px; border-radius: 4px;}
-.form-container
-  if error
-    div(style="color: red; margin-bottom: 15px; font-weight: bold;") #{error}
-  h2 New sale registration form
+//- doctype html
+//- head
+//-   meta(charset='UTF-8')
+//-   meta(name='viewport' content='width=device-width, initial-scale=1')
+//-   title New sale form
+//-   link(rel='stylesheet' href='/css/new_sale_form.css')
+//-   style.
+//-     .product-row { border-bottom: 1px dashed #ccc; padding-bottom: 15px; margin-bottom: 15px; }
+//-     .btn-add-item { background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer; margin-bottom: 15px; border-radius: 4px;}
+//- .form-container
+//-   if error
+//-     div(style="color: red; margin-bottom: 15px; font-weight: bold;") #{error}
+//-   h2 New sale registration form
   
-  form(
-    action='/addsale' 
-    method='post'
-    onsubmit="return confirm('Are you sure you want to confirm and record this sale transaction?');"
-  )
+//-   form(
+//-     action='/addsale' 
+//-     method='post'
+//-     onsubmit="return confirm('Are you sure you want to confirm and record this sale transaction?');"
+//-   )
     
-    //- Customer details container
-    h3 Customer Details
-    .row
-      .field
-        label(for='customername') Customer Name
-        input#customername(type='text' name="customername" required placeholder='e.g Paul Mukasa')
-      .field
-        label(for='customercontact') Customer Contact
-        input#customercontact(
-          type='text'
-          name='customercontact'
-          pattern='[7][0-9]{8}' 
-          minlength='9'
-          maxlength='9'
-          required
-          title='Enter a valid Ugandan number'
-          placeholder='7XXXXXXXX'
-        )
-      .field
-        label(for='customeraddress') Customer Address
-        input#customeraddress(type='text' name="customeraddress" required placeholder='e.g Nansana,Wakiso')
-    .row
-      .field
-        label(for='deliverymethod') Delivery Method
-        select#deliverymethod(name='deliverymethod' required)
-          option(value='' selected disabled) Select delivery method
-          option(value='hardware') Hardware Delivery
-          option(value='pickup') Customer's Transport
-      .field
-        label(for='customerdistance') Customer Distance (Km)
-        input#customerdistance(type='number' name='customerdistance' required placeholder='1 Km')
-    hr
-    h3 Products Items Ordered
+//-     //- Customer details container
+//-     h3 Customer Details
+//-     .row
+//-       .field
+//-         label(for='customername') Customer Name
+//-         input#customername(type='text' name="customername" required placeholder='e.g Paul Mukasa')
+//-       .field
+//-         label(for='customercontact') Customer Contact
+//-         input#customercontact(
+//-           type='text'
+//-           name='customercontact'
+//-           pattern='[7][0-9]{8}' 
+//-           minlength='9'
+//-           maxlength='9'
+//-           required
+//-           title='Enter a valid Ugandan number'
+//-           placeholder='7XXXXXXXX'
+//-         )
+//-       .field
+//-         label(for='customeraddress') Customer Address
+//-         input#customeraddress(type='text' name="customeraddress" required placeholder='e.g Nansana,Wakiso')
+//-     .row
+//-       .field
+//-         label(for='deliverymethod') Delivery Method
+//-         select#deliverymethod(name='deliverymethod' required)
+//-           option(value='' selected disabled) Select delivery method
+//-           option(value='hardware') Hardware Delivery
+//-           option(value='pickup') Customer's Transport
+//-       .field
+//-         label(for='customerdistance') Customer Distance (Km)
+//-         input#customerdistance(type='number' name='customerdistance' required placeholder='1 Km')
+//-     hr
+//-     h3 Products Items Ordered
     
-    //- Dynamic container holding rows of products
-    #itemsContainer
-      .product-row
-        .row
-          .field
-            label Product
-            select.productSelect(name='productId' required onchange="updatePrice(this)")
-              option(value='' disabled selected) Select product
-              each product in items 
-                option(value=product._id data-price=product.sellingprice) #{product.productname} (stock:#{product.quantity} | price:#{product.sellingprice}UGX)
-          .field
-            label Selling price
-            input.sellingprice(type='number' name='sellingprice' readonly)
+//-     //- Dynamic container holding rows of products
+//-     #itemsContainer
+//-       .product-row
+//-         .row
+//-           .field
+//-             label Product
+//-             select.productSelect(name='productId' required onchange="updatePrice(this)")
+//-               option(value='' disabled selected) Select product
+//-               each product in items 
+//-                 option(value=product._id data-price=product.sellingprice) #{product.productname} (stock:#{product.quantity} | price:#{product.sellingprice}UGX)
+//-           .field
+//-             label Selling price
+//-             input.sellingprice(type='number' name='sellingprice' readonly)
           
+//-         .row
+//-           .field
+//-             label(for='qty') Quantity
+//-             input(type='number' name='qty' min='1' required placeholder='10')
+//-           .field
+//-             label Unit
+//-             select(name='unit' required)
+//-               option(value='' disabled selected) Select unit
+//-               option(value='bags') Bags
+//-               option(value='pieces') Pieces
+//-               option(value='kg') Kg 
+//-               option(value='packs') Packs
+//-               option(value='rolls') Rolls
+//-               option(value='sheets') Sheets
+
+//-     button.btn-add-item(type='button' onclick='addItemRow()') + Add Another Product
+
+//-     .form-actions
+//-       button.btn-save(type='submit') Confirm &amp; Record sale
+//-       button.btn.btn-cancel(
+//-           type='button'
+//-           onclick="window.location.href='/sales-list'"
+//-         ) Cancel
+
+//- script.
+//-   // Function to pull price data attribute on selection changes
+//-   function updatePrice(selectElement) {
+//-     const selectedOption = selectElement.options[selectElement.selectedIndex];
+//-     const price = selectedOption.getAttribute('data-price');
+//-     const row = selectElement.closest('.product-row');
+//-     row.querySelector('.sellingprice').value = price || '';
+//-   }
+
+//-   // Function to clone a clean product input block dynamically
+//-   function addItemRow() {
+//-     const container = document.getElementById('itemsContainer');
+//-     const firstRow = container.querySelector('.product-row');
+//-     const newRow = firstRow.cloneNode(true);
+    
+//-     newRow.querySelector('.productSelect').selectedIndex = 0;
+//-     newRow.querySelector('.sellingprice').value = '';
+//-     newRow.querySelector('input[name="qty"]').value = '';
+//-     newRow.querySelector('select[name="unit"]').selectedIndex = 0;
+    
+//-     container.appendChild(newRow);
+//-   }
+
+//-   // Event Listener for delivery changes to automatically zero out distance and mark as read-only
+//-   document.getElementById('deliverymethod').addEventListener('change', function() {
+//-     const distanceInput = document.getElementById('customerdistance');
+//-     if (this.value === 'pickup') {
+//-       distanceInput.value = 0;
+//-       distanceInput.setAttribute('readonly', true);
+//-     } else {
+//-       distanceInput.removeAttribute('readonly');
+//-       distanceInput.value = '';
+//-     }
+//-   });
+
+
+
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    title New sale form
+    link(rel='stylesheet' href='/css/new_sale_form.css')
+    style.
+      .product-row { border-bottom: 1px dashed #ccc; padding-bottom: 15px; margin-bottom: 15px; position: relative; }
+      .btn-add-item { background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer; margin-bottom: 15px; border-radius: 4px;}
+      .btn-remove-item { color: #dc3545; background: none; border: none; cursor: pointer; font-weight: bold; font-size: 14px; margin-top: 8px; display: inline-flex; align-items: center; gap: 4px; }
+      .btn-remove-item:hover { text-decoration: underline; }
+  
+  body
+    .form-container
+      if error
+        div(style="color: red; margin-bottom: 15px; font-weight: bold;") #{error}
+      h2 New sale registration form
+      
+      form(
+        action='/addsale' 
+        method='post'
+        onsubmit="return confirm('Are you sure you want to confirm and record this sale transaction?');"
+      )
+        
+        //- Customer details container
+        h3 Customer Details
         .row
           .field
-            label(for='qty') Quantity
-            input(type='number' name='qty' min='1' required placeholder='10')
+            label(for='customername') Customer Name
+            input#customername(type='text' name="customername" required placeholder='e.g Paul Mukasa')
           .field
-            label Unit
-            select(name='unit' required)
-              option(value='' disabled selected) Select unit
-              option(value='bags') Bags
-              option(value='pieces') Pieces
-              option(value='kg') Kg 
-              option(value='packs') Packs
-              option(value='rolls') Rolls
-              option(value='sheets') Sheets
+            label(for='customercontact') Customer Contact
+            input#customercontact(
+              type='text'
+              name='customercontact'
+              pattern='[7][0-9]{8}' 
+              minlength='9'
+              maxlength='9'
+              required
+              title='Enter a valid Ugandan number'
+              placeholder='7XXXXXXXX'
+            )
+          .field
+            label(for='customeraddress') Customer Address
+            input#customeraddress(type='text' name="customeraddress" required placeholder='e.g Nansana,Wakiso')
+        .row
+          .field
+            label(for='deliverymethod') Delivery Method
+            select#deliverymethod(name='deliverymethod' required)
+              option(value='' selected disabled) Select delivery method
+              option(value='hardware') Hardware Delivery
+              option(value='pickup') Customer's Transport
+          .field
+            label(for='customerdistance') Customer Distance (Km)
+            input#customerdistance(type='number' name='customerdistance' required placeholder='1 Km')
+        hr
+        h3 Products Items Ordered
+        
+        //- Dynamic container holding rows of products
+        #itemsContainer
+          .product-row
+            .row
+              .field
+                label Product
+                select.productSelect(name='productId' required onchange="updatePrice(this)")
+                  option(value='' disabled selected) Select product
+                  if items && items.length > 0
+                    each product in items 
+                      option(value=product._id data-price=product.sellingprice) #{product.productname} (stock:#{product.quantity} | price:#{product.sellingprice}UGX)
+                  else
+                    option(disabled) No products available
+              .field
+                label Selling price
+                input.sellingprice(type='number' name='sellingprice' readonly)
+              
+            .row
+              .field
+                label(for='qty') Quantity
+                input(type='number' name='qty' min='1' required placeholder='10')
+              .field
+                label Unit
+                select(name='unit' required)
+                  option(value='' disabled selected) Select unit
+                  option(value='bags') Bags
+                  option(value='pieces') Pieces
+                  option(value='kg') Kg 
+                  option(value='packs') Packs
+                  option(value='rolls') Rolls
+                  option(value='sheets') Sheets
 
-    button.btn-add-item(type='button' onclick='addItemRow()') + Add Another Product
+        button.btn-add-item(type='button' onclick='addItemRow()') + Add Another Product
 
-    .form-actions
-      button.btn-save(type='submit') Confirm &amp; Record sale
-      button.btn.btn-cancel(
-          type='button'
-          onclick="window.location.href='/sales-list'"
-        ) Cancel
+        .form-actions
+          button.btn-save(type='submit') Confirm &amp; Record sale
+          button.btn.btn-cancel(
+              type='button'
+              onclick="window.location.href='/sales-list'"
+            ) Cancel
 
-script.
-  // Function to pull price data attribute on selection changes
-  function updatePrice(selectElement) {
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
-    const price = selectedOption.getAttribute('data-price');
-    const row = selectElement.closest('.product-row');
-    row.querySelector('.sellingprice').value = price || '';
-  }
+    script.
+      // Function to pull price data attribute on selection changes
+      function updatePrice(selectElement) {
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
+        const row = selectElement.closest('.product-row');
+        row.querySelector('.sellingprice').value = price || '';
+      }
 
-  // Function to clone a clean product input block dynamically
-  function addItemRow() {
-    const container = document.getElementById('itemsContainer');
-    const firstRow = container.querySelector('.product-row');
-    const newRow = firstRow.cloneNode(true);
-    
-    newRow.querySelector('.productSelect').selectedIndex = 0;
-    newRow.querySelector('.sellingprice').value = '';
-    newRow.querySelector('input[name="qty"]').value = '';
-    newRow.querySelector('select[name="unit"]').selectedIndex = 0;
-    
-    container.appendChild(newRow);
-  }
+      // Function to clone a clean product input block dynamically with a remove option
+      function addItemRow() {
+        const container = document.getElementById('itemsContainer');
+        const firstRow = container.querySelector('.product-row');
+        const newRow = firstRow.cloneNode(true);
+        
+        // Clear old selected options and text input values
+        newRow.querySelector('.productSelect').selectedIndex = 0;
+        newRow.querySelector('.sellingprice').value = '';
+        newRow.querySelector('input[name="qty"]').value = '';
+        newRow.querySelector('select[name="unit"]').selectedIndex = 0;
+        
+        // Remove any old removal buttons carried over from cloning logic
+        const existingRemoveBtn = newRow.querySelector('.btn-remove-item');
+        if (existingRemoveBtn) {
+          existingRemoveBtn.remove();
+        }
+        
+        // Create the new dynamic remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn-remove-item';
+        removeBtn.innerHTML = '✕ Remove Item';
+        removeBtn.onclick = function() {
+          newRow.remove();
+        };
+        
+        // Append button to the newly added row segment
+        newRow.appendChild(removeBtn);
+        container.appendChild(newRow);
+      }
 
-  // Event Listener for delivery changes to automatically zero out distance and mark as read-only
-  document.getElementById('deliverymethod').addEventListener('change', function() {
-    const distanceInput = document.getElementById('customerdistance');
-    if (this.value === 'pickup') {
-      distanceInput.value = 0;
-      distanceInput.setAttribute('readonly', true);
-    } else {
-      distanceInput.removeAttribute('readonly');
-      distanceInput.value = '';
-    }
-  });
+      // Event Listener for delivery changes to automatically zero out distance and mark as read-only
+      document.getElementById('deliverymethod').addEventListener('change', function() {
+        const distanceInput = document.getElementById('customerdistance');
+        if (this.value === 'pickup') {
+          distanceInput.value = 0;
+          distanceInput.setAttribute('readonly', true);
+        } else {
+          distanceInput.removeAttribute('readonly');
+          distanceInput.value = '';
+        }
+      });

@@ -18,10 +18,15 @@ router.post("/register", async (req, res) => {
     const { fullname, email, phonenumber, nin, userrole, password } = req.body;
 
     // Phone number validation
-    const phone = "+256" + phonenumber;
+    // const phone = "+256" + phonenumber;
+    let rawPhone = phonenumber.trim();
+    if (rawPhone.startsWith("0")) {
+      rawPhone = rawPhone.substring(1);
+    }
+    const phone = "+256" + rawPhone;
 
     // NIN validation
-    const ninRegex = /^C[MF][A-Z0-9]{12}$/;
+    const ninRegex = /^C[MF][0-9]{2}[0-9A-Z]{10}$/;
 
     if (!ninRegex.test(nin.trim().toUpperCase())) {
       return res.render("user_registration", {

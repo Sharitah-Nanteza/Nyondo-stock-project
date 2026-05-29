@@ -27,13 +27,33 @@ head
     .form-group
       label(for='phonenumber') Phone Number
       //- Added required attribute
-      input#phonenumber(type='text' name='phonenumber' placeholder='7XXXXXXXX' pattern='[7][0-9]{8}' minlength='9' maxlength='9' title='Enter a valid Ugandan number starting with 7' required)
+      //- input#phonenumber(type='text' name='phonenumber' placeholder='7XXXXXXXX' pattern='[7][0-9]{8}' minlength='9' maxlength='9' title='Enter a valid Ugandan number starting with 7' required)
+      input#phonenumber(
+        type='text' 
+        name='phonenumber' 
+        placeholder='e.g., 07XXXXXXXX' 
+        pattern='[0][7][0-9]{8}' 
+        minlength='10' 
+        maxlength='10' 
+        required
+        title='Enter a valid 10-digit Ugandan number starting with 07'
+      )
     
     .form-group
       label(for='nin') NIN
       //- Added required attribute and cleaned up the pattern to match standard 14-character Ugandan NINs
-      input#nin(type='text' name='nin' pattern='[A-Z]{2}[0-9]{2}[0-9A-Z]{10}' title='Enter a valid 14-character Ugandan NIN' placeholder='CF23MXXXXXXX' required)
-    
+      //- input#nin(type='text' name='nin' pattern='[A-Z]{2}[0-9]{2}[0-9A-Z]{10}' title='Enter a valid 14-character Ugandan NIN' placeholder='CF23MXXXXXXX' required)
+      input#nin(
+        type='text' 
+        name='nin' 
+        pattern='^C[MF][0-9]{2}[0-9A-Z]{10}$'
+        maxlength='14'
+        required
+        style='text-transform: uppercase;'
+        oninput="this.value = this.value.toUpperCase();"
+        placeholder='e.g., CM9501234567A8' 
+        title='Enter a valid 14-character Ugandan Citizen NIN starting with CM or CF (e.g., CM9501234567A8)'
+      )
     .form-group
       label(for='role') Role
       //- Added required attribute directly to the select tag

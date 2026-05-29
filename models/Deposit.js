@@ -9,8 +9,8 @@ const depositSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
-    uppercase: true,
-    match: [/^C[MF]\d{10}[A-Z]{3}$/, "Enter a valid Ugandan NIN"],
+    uppercase: true, // Automatically forces the stored text to be uppercase in MongoDB
+    match: [/^C[MF][0-9]{2}[0-9A-Z]{10}$/, "Enter a valid 14-character Ugandan Citizen NIN starting with CM or CF"], // UPDATED REGEX PATTERN HERE
   },
   phonenumber: {
     type: String,
@@ -24,22 +24,22 @@ const depositSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-depositedItems: [
+  depositedItems: [
     {
-  productname: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Stock",
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-  },
-  priceAtDeposit: {
+      productname: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Stock",
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+      priceAtDeposit: {
         type: Number,
         required: true
       }
-}
+    }
   ],
   amountDeposited: {
     type: Number,
@@ -60,7 +60,7 @@ depositedItems: [
     default: Date.now,
   },
 
-paymentHistory: [
+  paymentHistory: [
     {
       amount: { type: Number, required: true },
       paymentMethod: { type: String, required: true }, // 'cash', 'momo', 'bank'
